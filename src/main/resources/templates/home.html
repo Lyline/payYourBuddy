@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pay my buddy - Home</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<header class="container">
+    <div class="d-flex justify-content-between" style="padding:15px; ">
+        <h1 class="bg-success btn-lg text-white">Pay my buddy</h1>
+        <nav class="nav justify-content-between align-content-center" style="width: 40%;">
+            <a href="">Home</a>
+            <a href="">Transfer</a>
+            <a href="">Profile</a>
+            <a href="">Contact</a>
+            <a href="">Log off</a>
+        </nav>
+    </div>
+    <nav class="nav bg-light" style="padding-left: 15px;">
+        <a class="nav-link inactive" href="#">Home</a>
+    </nav>
+</header>
+<main class="container">
+    <p class="text-end">Hi, <span th:text="${user.firstName}">Unknown</span></p>
+
+    <div class="" style="width: 90%; margin: auto">
+        <div class="row">
+            <div class="col-5">
+                <p class="badge bg-primary">Actual credit :</p>
+            </div>
+            <div class="col-5">
+                <span th:text="${user.getBalance}"> your money</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-5">
+                <p class="badge bg-success">Last transaction :</p>
+            </div>
+            <div class="col-7">
+            <span
+                    th:text="   ${lastUserTransaction.id!=null}
+                    ?(${lastUserTransaction.getDebtor.id==user.id}
+                        ? ${lastUserTransaction.creditor.firstName}+' '+${lastUserTransaction.creditor.lastName}+' --- '
+                        : ${lastUserTransaction.debtor.firstName}+' '+${lastUserTransaction.debtor.lastName}+' --- ')
+                    :'No user transaction yet'">User
+            </span>
+                <span th:text="${lastUserTransaction.id!=null}
+                    ?${lastUserTransaction.description}+' --- '
+                    :''">Description
+                </span>
+                <span th:text="${lastUserTransaction.id!=null}
+                ?(${lastUserTransaction.debtor.id==user.id}
+                        ? '-'+${lastUserTransaction.value}
+                        : '+'+${lastUserTransaction.value})
+                :''">Value</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-5">
+                <h2 class="badge bg-success">Last transfert :</h2>
+            </div>
+            <div class="col-7">
+                <span th:text="${lastBankTransaction.id!=null}
+                        ?${lastBankTransaction.description}+' --- '
+                        :'No bank transaction yet'"></span>
+
+                <span th:text="${lastBankTransaction.id!=null}
+                        ?${lastBankTransaction.value}
+                        :''"></span>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
