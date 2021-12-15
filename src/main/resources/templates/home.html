@@ -10,24 +10,25 @@
 </head>
 
 <body>
-<header class="container">
+<header>
     <div class="d-flex justify-content-between" style="padding:15px; ">
         <h1 class="bg-success btn-lg text-white">Pay my buddy</h1>
         <nav class="nav justify-content-between align-content-center" style="width: 40%;">
             <a href="">Home</a>
-            <a href="">Transfer</a>
+            <a th:href="@{/transfert}">Transfer</a>
             <a href="">Profile</a>
             <a href="">Contact</a>
             <a href="">Log off</a>
         </nav>
     </div>
     <nav class="nav bg-light" style="padding-left: 15px;">
-        <a class="nav-link inactive" href="#">Home</a>
+        <a class="nav-link inactive" th:href="@{/}">Home</a>
     </nav>
 </header>
 <main class="container">
     <p class="text-end">Hi, <span th:text="${user.firstName}">Unknown</span></p>
 
+    <h3>My buddy dashboard</h3>
     <div class="" style="width: 90%; margin: auto">
         <div class="row">
             <div class="col-5">
@@ -46,12 +47,12 @@
             <span
                     th:text="   ${lastUserTransaction.id!=null}
                     ?(${lastUserTransaction.getDebtor.id==user.id}
-                        ? ${lastUserTransaction.creditor.firstName}+' '+${lastUserTransaction.creditor.lastName}+' --- '
-                        : ${lastUserTransaction.debtor.firstName}+' '+${lastUserTransaction.debtor.lastName}+' --- ')
+                        ? ${lastUserTransaction.creditor.firstName}+' '+${lastUserTransaction.creditor.lastName}+'  '
+                        : ${lastUserTransaction.debtor.firstName}+' '+${lastUserTransaction.debtor.lastName}+'  ')
                     :'No user transaction yet'">User
             </span>
-                <span th:text="${lastUserTransaction.id!=null}
-                    ?${lastUserTransaction.description}+' --- '
+                <span class="fst-italic" th:text="${lastUserTransaction.id!=null}
+                    ?${lastUserTransaction.description}+' '
                     :''">Description
                 </span>
                 <span th:text="${lastUserTransaction.id!=null}
@@ -67,8 +68,8 @@
                 <h2 class="badge bg-success">Last transfert :</h2>
             </div>
             <div class="col-7">
-                <span th:text="${lastBankTransaction.id!=null}
-                        ?${lastBankTransaction.description}+' --- '
+                <span class="fst-italic" th:text="${lastBankTransaction.id!=null}
+                        ?${lastBankTransaction.description}+'  '
                         :'No bank transaction yet'"></span>
 
                 <span th:text="${lastBankTransaction.id!=null}
