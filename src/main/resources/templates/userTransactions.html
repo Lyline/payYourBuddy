@@ -15,6 +15,7 @@
         <nav class="nav justify-content-between align-content-center" style="width: 50%;">
             <a th:href="@{/{id}(id=${user.id})}">Home</a>
             <a th:href="@{/{id}/user_transactions(id=${user.id})}">Buddy Money</a>
+            <a th:href="@{/{id}/bank_transactions(id=${user.id})}">Sweety bank</a>
             <a href="">Profile</a>
             <a href="">Contact</a>
             <a href="">Log off</a>
@@ -22,7 +23,7 @@
     </div>
     <nav class="nav bg-light" style="padding-left: 15px;">
         <a class="nav-link active" th:href="@{/{id}(id=${user.id})}">Home</a>
-        <a class="nav-link disabled">Transfert</a>
+        <a class="nav-link disabled">&rarr; Transfert</a>
     </nav>
 </header>
 <main class="container">

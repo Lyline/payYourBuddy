@@ -1,7 +1,9 @@
 package com.enterprise.paymybuddy.controller;
 
+import com.enterprise.paymybuddy.dto.BankTransactionDTO;
 import com.enterprise.paymybuddy.dto.UserDTO;
 import com.enterprise.paymybuddy.dto.UserTransactionDTO;
+import com.enterprise.paymybuddy.entity.BankTransaction;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
 import com.enterprise.paymybuddy.service.BankTransactionServiceImpl;
@@ -79,5 +81,36 @@ public class TransactionController {
     model.addAttribute("userTransactions",userTransactionsDTO);
 
     return "userTransactions";
+  }
+
+  @GetMapping("/bank_transactions")
+  public String showBankTransactions(Model model, @PathVariable Long id,
+                                     @RequestParam("page") Optional<Integer> bankPage,
+                                     @RequestParam("size") Optional<Integer> bankSize){
+    int currentPageBank= bankPage.orElse(1);
+    int pageSizeBank= bankSize.orElse(3);
+
+    //User
+    User user= userService.getUser(id).get();
+    UserDTO userDTO=mapper.map(user,UserDTO.class);
+
+    //Bank transaction
+    Page<BankTransaction>bankTransactions=bankTransactionService
+        .getAllTransactions(id,PageRequest.of(currentPageBank-1,pageSizeBank));
+    Page<BankTransactionDTO> bankTransactionsDTO= bankTransactions
+        .map(transaction -> mapper.map(transaction,BankTransactionDTO.class));
+
+    //Pagination
+    if (bankTransactionsDTO.getTotalPages()>0){
+      List<Integer> bankTransactionPageNumbers = IntStream.rangeClosed(1,bankTransactionsDTO.getTotalPages())
+          .boxed()
+          .collect(Collectors.toList());
+      model.addAttribute("bankTransactionPageNumbers",bankTransactionPageNumbers);
+    }
+
+    model.addAttribute("user",userDTO);
+    model.addAttribute("bankTransactions",bankTransactions);
+
+    return "bankTransactions";
   }
 }

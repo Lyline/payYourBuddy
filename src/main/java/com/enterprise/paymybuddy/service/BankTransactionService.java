@@ -1,0 +1,9 @@
+package com.enterprise.paymybuddy.service;
+
+import com.enterprise.paymybuddy.entity.BankTransaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface BankTransactionService {
+  Page<BankTransaction> getAllTransactions(Long id, Pageable pageable);
+}
