@@ -55,4 +55,17 @@ public class User {
     this.bankAccount = bankAccount;
     this.balance = balance;
   }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "userId=" + userId +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", email='" + email + '\'' +
+        ", password='" + password + '\'' +
+        ", bankAccount='" + bankAccount + '\'' +
+        ", balance=" + balance +
+        '}';
+  }
 }
