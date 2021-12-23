@@ -17,7 +17,7 @@
             <a th:href="@{/{id}(id=${user.id})}">Home</a>
             <a th:href="@{/{id}/user_transactions(id=${user.id})}">Buddy Money</a>
             <a th:href="@{/{id}/bank_transactions(id=${user.id})}">Sweety bank</a>
-            <a href="">Profile</a>
+            <a th:href="@{/{id}/profile(id=${user.id})}">Profile</a>
             <a href="">Contact</a>
             <a href="">Log off</a>
         </nav>

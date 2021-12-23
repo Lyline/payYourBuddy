@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay my buddy - Home</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<header>
+    <div class="d-flex justify-content-between" style="padding:15px; ">
+        <h1 class="bg-success btn-lg text-white">Pay my buddy</h1>
+        <nav class="nav justify-content-between align-content-center" style="width: 50%;">
+            <a th:href="@{/{id}(id=${user.id})}">Home</a>
+            <a th:href="@{/{id}/user_transactions(id=${user.id})}">Buddy Money</a>
+            <a th:href="@{/{id}/bank_transactions(id=${user.id})}">Sweety bank</a>
+            <a href="">Profile</a>
+            <a href="">Contact</a>
+            <a href="">Log off</a>
+        </nav>
+    </div>
+    <nav class="nav bg-light" style="padding-left: 15px;">
+        <a class="nav-link inactive" th:href="@{/{id}(id=${user.id})}">Home</a>
+        <a class="nav-link disabled">&rarr; Profile</a>
+    </nav>
+</header>
+<main class="container">
+    <h3>My profile</h3>
+    <div class="row alert alert-secondary" role="alert">
+        <div class="col-3"><label class="h4">First name :</label></div>
+        <div class="col"><span class="col align-middle fw-bold" th:text="${userInfo.firstName}">firstName</span></div>
+    </div>
+    <div class="row alert alert-secondary" role="alert">
+        <div class="col-3"><label class="h4">Last name :</label></div>
+        <div class="col"><span class="col align-middle fw-bold" th:text="${userInfo.lastName}">lastName</span></div>
+    </div>
+    <div class="row alert alert-secondary" role="alert">
+        <div class="col-3"><label class="h4">Email :</label></div>
+        <div class="col"><span class="col align-middle fw-bold" th:text="${userInfo.email}">email</span></div>
+    </div>
+    <div class="row alert alert-secondary" role="alert">
+        <div class="col-3"><label class="h4">Balance :</label></div>
+        <div class="col"><span class="col align-middle fw-bold" th:text="${userInfo.balance}">balance</span></div>
+    </div>
+    <div class="row alert alert-secondary" role="alert">
+        <div class="col-3"><label class="h4">Bank account number :</label></div>
+        <div class="col"><span class="col align-middle fw-bold" th:text="${userInfo.bankAccount}">bankAccount</span></div>
+    </div>
+</main>
+</body>
+</html>
