@@ -30,6 +30,28 @@
 </header>
 <main class="container">
     <p class="d-flex justify-content-end">Hi, <span th:text="${user.firstName}">User</span></p>
+    <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
+
+        <form th:action="@{/{id}/bank_transactions(id=${user.id})}" method="post" th:object="${newTransaction}">
+            <select class="form-select-sm" th:field="*{type}">
+                <!--<div th:if="${#fields.hasErrors('creditorId')}" th:errors="*{creditorId}">Errors</div>-->
+                <option value="">Select your transfert</option>
+                <option th:value="send">Send money</option>
+                <option th:value="receive">Receive money</option>
+            </select>
+
+           <!-- <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Errors</div>-->
+            <input type="text" name="description" size="20px" th:field="*{description}"/>
+
+           <!-- <div th:if="${#fields.hasErrors('value')}" th:errors="*{description}">Errors</div>-->
+            <input type="text" id="value" name="valueTransaction" size="10px"
+                   placeholder="Value" th:field="*{value}">
+
+            <!--<div type="hidden"  th:value="user.id" th:field="*{debtorId}"><span ></span></div>-->
+
+            <button class="btn btn-success btn-lg" type="submit">Pay</button>
+        </form>
+    </div>
     <h3>My transferts</h3>
     <div>
         <table class="table table-striped table-bordered">

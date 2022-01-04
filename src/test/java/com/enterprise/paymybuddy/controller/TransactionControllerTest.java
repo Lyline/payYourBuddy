@@ -102,6 +102,32 @@ class TransactionControllerTest {
   }
 
   @Test
+  void givenAUserWithEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionValidated() throws Exception {
+    //Given
+    when(userTransactionService.createTransaction(any())).thenReturn(true);
+
+    //When
+    mockMvc.perform(post("/1/user_transactions"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("transactionSuccess"))
+
+        .andExpect(content().string(containsString("Transaction validated")));
+  }
+
+  @Test
+  void givenAUserWithNotEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionAborted() throws Exception {
+    //Given
+    when(userTransactionService.createTransaction(any())).thenReturn(false);
+
+    //When
+    mockMvc.perform(post("/1/user_transactions"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("transactionAborted"))
+
+        .andExpect(content().string(containsString("Transaction aborted - Not enough money")));
+  }
+
+  @Test
   void givenAUserWithTwoBankTransactionWhenShowBankTransactionThenTwoTransactionsDisplayed() throws Exception {
     //Given
     bankTransactions.add(bankTransaction);
@@ -148,12 +174,12 @@ class TransactionControllerTest {
   }
 
   @Test
-  void givenAUserWithEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionValidate() throws Exception {
+  void givenAUserWithEnoughMoneyWhenProcessBankTransactionThenTransactionValidated() throws Exception {
     //Given
-    when(userTransactionService.createTransaction(any())).thenReturn(true);
+    when(bankTransactionService.createTransaction(any())).thenReturn(true);
 
     //When
-    mockMvc.perform(post("/1/user_transactions"))
+    mockMvc.perform(post("/1/bank_transactions"))
         .andExpect(status().isOk())
         .andExpect(view().name("transactionSuccess"))
 
@@ -161,12 +187,12 @@ class TransactionControllerTest {
   }
 
   @Test
-  void givenAUserWithNotEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionAborted() throws Exception {
+  void givenAUserWithNotEnoughMoneyWhenProcessBankTransactionThenTransactionValidated() throws Exception {
     //Given
-    when(userTransactionService.createTransaction(any())).thenReturn(false);
+    when(bankTransactionService.createTransaction(any())).thenReturn(false);
 
     //When
-    mockMvc.perform(post("/1/user_transactions"))
+    mockMvc.perform(post("/1/bank_transactions"))
         .andExpect(status().isOk())
         .andExpect(view().name("transactionAborted"))
 

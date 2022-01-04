@@ -1,9 +1,6 @@
 package com.enterprise.paymybuddy.controller;
 
-import com.enterprise.paymybuddy.dto.BankTransactionDTO;
-import com.enterprise.paymybuddy.dto.UserDTO;
-import com.enterprise.paymybuddy.dto.UserTransactionCreationDTO;
-import com.enterprise.paymybuddy.dto.UserTransactionDTO;
+import com.enterprise.paymybuddy.dto.*;
 import com.enterprise.paymybuddy.entity.BankTransaction;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
@@ -88,11 +85,11 @@ public class TransactionController{
   }
 
   @PostMapping("/user_transactions")
-  public String sendUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
-                                    @PathVariable String id,
-                                    Model model,
-                                    BindingResult bindingResult){
-    transaction.setDebtorId(Long.valueOf(id));
+  public String processUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
+                                       @PathVariable Long id,
+                                       Model model,
+                                       BindingResult bindingResult){
+    transaction.setDebtorId(id);
 
     if (bindingResult.hasErrors()) {
       return "userTransactions";
@@ -135,7 +132,29 @@ public class TransactionController{
 
     model.addAttribute("user",userDTO);
     model.addAttribute("bankTransactions",bankTransactions);
+    model.addAttribute("newTransaction",new BankTransactionCreationDTO());
 
     return "bankTransactions";
+  }
+
+  @PostMapping("/bank_transactions")
+  public String processBankTransaction(@Valid @ModelAttribute("newTransaction")BankTransactionCreationDTO transaction,
+                                       @PathVariable Long id,
+                                       Model model,
+                                       BindingResult bindingResult){
+    transaction.setUserId(id);
+
+    if (bindingResult.hasErrors()) {
+      return "bankTransactions";
+    }
+
+    boolean transactionValidated=bankTransactionService.createTransaction(transaction);
+    model.addAttribute("id",id);
+
+    if (transactionValidated) {
+      return "transactionSuccess";
+    } else {
+      return "transactionAborted";
+    }
   }
 }
