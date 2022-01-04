@@ -2,6 +2,7 @@ package com.enterprise.paymybuddy.controller;
 
 import com.enterprise.paymybuddy.dto.BankTransactionDTO;
 import com.enterprise.paymybuddy.dto.UserDTO;
+import com.enterprise.paymybuddy.dto.UserTransactionCreationDTO;
 import com.enterprise.paymybuddy.dto.UserTransactionDTO;
 import com.enterprise.paymybuddy.entity.BankTransaction;
 import com.enterprise.paymybuddy.entity.User;
@@ -14,11 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,13 +27,15 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/{id}")
-public class TransactionController {
+public class TransactionController{
 
   private final UserServiceImpl userService;
   private final UserTransactionServiceImpl userTransactionService;
   private final BankTransactionServiceImpl bankTransactionService;
 
-  private ModelMapper mapper=new ModelMapper();
+  private final ModelMapper mapper=new ModelMapper();
+
+
 
   public TransactionController(UserServiceImpl userService,
                                UserTransactionServiceImpl userTransactionService,
@@ -64,7 +66,8 @@ public class TransactionController {
     }
 
     //User transactions
-    Page<UserTransaction> userTransactions=userTransactionService.getAllTransactions(id, PageRequest.of(currentPageUser-1,pageSizeUser));
+    Page<UserTransaction> userTransactions=userTransactionService.getAllTransactions(id, PageRequest.of(currentPageUser-1,
+        pageSizeUser));
     Page<UserTransactionDTO> userTransactionsDTO = userTransactions
         .map(transaction -> mapper.map(transaction,UserTransactionDTO.class));
 
@@ -79,8 +82,30 @@ public class TransactionController {
     model.addAttribute("user",userDTO);
     model.addAttribute("friends",friends);
     model.addAttribute("userTransactions",userTransactionsDTO);
+    model.addAttribute("newTransaction",new UserTransactionCreationDTO());
 
     return "userTransactions";
+  }
+
+  @PostMapping("/user_transactions")
+  public String sendUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
+                                    @PathVariable String id,
+                                    Model model,
+                                    BindingResult bindingResult){
+    transaction.setDebtorId(Long.valueOf(id));
+
+    if (bindingResult.hasErrors()) {
+      return "userTransactions";
+    }
+
+    boolean transactionValidated=userTransactionService.createTransaction(transaction);
+    model.addAttribute("id",id);
+
+    if (transactionValidated) {
+      return "transactionSuccess";
+    } else {
+      return "transactionAborted";
+    }
   }
 
   @GetMapping("/bank_transactions")

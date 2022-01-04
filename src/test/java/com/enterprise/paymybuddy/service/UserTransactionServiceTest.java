@@ -1,7 +1,9 @@
 package com.enterprise.paymybuddy.service;
 
+import com.enterprise.paymybuddy.dto.UserTransactionCreationDTO;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
+import com.enterprise.paymybuddy.jpa.UserRepository;
 import com.enterprise.paymybuddy.jpa.UserTransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,13 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class UserTransactionServiceTest {
 
-  private UserTransactionRepository repository=mock(UserTransactionRepository.class);
-  private UserTransactionServiceImpl classUnderTest=new UserTransactionServiceImpl(repository);
+  private final UserTransactionRepository transactionRepository =mock(UserTransactionRepository.class);
+  private final UserRepository userRepository= mock(UserRepository.class);
+  private final UserTransactionServiceImpl classUnderTest=new UserTransactionServiceImpl(transactionRepository,userRepository);
 
   User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
   User user1=new User("Steve","Rogers","steve@test.com","pw","bank",100.);
@@ -33,19 +37,21 @@ class UserTransactionServiceTest {
     user.setUserId(1L);
     user1.setUserId(2L);
 
-    user.getUserTransactions().add(transaction);
-    user.getUserTransactions().add(transaction1);
 
-    transactions.add(transaction);
-    transactions.add(transaction1);
   }
 
   @Test
   void givenAnUserWithTwoUserTransactionsWhenGetAllTransactionsThenTwoTransactionsFound() {
     //Given
+    user.getUserTransactions().add(transaction);
+    user.getUserTransactions().add(transaction1);
+
+    transactions.add(transaction);
+    transactions.add(transaction1);
+
     Page<UserTransaction>page=new PageImpl<>(transactions);
 
-    when(repository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
         .thenReturn(page);
 
     //When
@@ -53,14 +59,14 @@ class UserTransactionServiceTest {
 
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(2);
-    verify(repository,times(1))
+    verify(transactionRepository,times(1))
         .findUserTransactionsByCreditor_UserIdOrDebtor_UserId(1L,1L,PageRequest.of(0,3));
   }
 
   @Test
   void givenAnUserWithoutUserTransactionWhenGetAllTransactionThenPageIsEmpty() {
     //Given
-    when(repository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
         .thenReturn(Page.empty());
 
     //When
@@ -68,7 +74,56 @@ class UserTransactionServiceTest {
 
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(0);
-    verify(repository,times(1))
+    verify(transactionRepository,times(1))
         .findUserTransactionsByCreditor_UserIdOrDebtor_UserId(1L,1L,PageRequest.of(0,3));
+  }
+
+  @Test
+  void givenADebtorWithMoneyAndACreditorWhenCreateTransactionThenTransactionSaved() {
+    //Given
+    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
+
+    UserTransaction transaction=new UserTransaction();
+    transaction.setDebtor(user);
+    transaction.setCreditor(user1);
+    transaction.setDescription(transactionDTO.getDescription());
+    transaction.setValue(transactionDTO.getValue());
+
+    when(userRepository.getById(transactionDTO.getDebtorId())).thenReturn(user);
+    when(userRepository.getById(transactionDTO.getCreditorId())).thenReturn(user1);
+
+    when(transactionRepository.save(any())).thenReturn(transaction);
+
+    //When
+    classUnderTest.createTransaction(transactionDTO);
+
+    //Then
+    assertThat(user.getBalance()).isEqualTo(90.);
+    assertThat(user1.getBalance()).isEqualTo(110.);
+  }
+
+  @Test
+  void givenADebtorWithoutMoneyAndACreditorWhenCreateTransactionThenReturnException() {
+    //Given
+    user.setBalance(0.);
+
+    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
+
+    UserTransaction transaction=new UserTransaction();
+    transaction.setDebtor(user);
+    transaction.setCreditor(user1);
+    transaction.setDescription(transactionDTO.getDescription());
+    transaction.setValue(transactionDTO.getValue());
+
+    when(userRepository.getById(transactionDTO.getDebtorId())).thenReturn(user);
+    when(userRepository.getById(transactionDTO.getCreditorId())).thenReturn(user1);
+
+    when(transactionRepository.save(any())).thenReturn(transaction);
+
+    //When
+    boolean actual=classUnderTest.createTransaction(transactionDTO);
+
+    //Then
+    assertFalse(actual);
   }
 }

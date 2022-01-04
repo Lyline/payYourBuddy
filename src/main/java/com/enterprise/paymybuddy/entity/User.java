@@ -15,7 +15,7 @@ uniqueConstraints = @UniqueConstraint(name = "email_unique",columnNames = "email
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
   private Long userId;
 

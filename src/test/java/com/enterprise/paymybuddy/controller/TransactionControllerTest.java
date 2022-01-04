@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TransactionController.class)
@@ -143,6 +145,31 @@ class TransactionControllerTest {
 
         .andExpect(content().string(containsString("Hi, <span>John</span>")))
         .andExpect(content().string(containsString("No transaction yet")));
+  }
 
+  @Test
+  void givenAUserWithEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionValidate() throws Exception {
+    //Given
+    when(userTransactionService.createTransaction(any())).thenReturn(true);
+
+    //When
+    mockMvc.perform(post("/1/user_transactions"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("transactionSuccess"))
+
+        .andExpect(content().string(containsString("Transaction validated")));
+  }
+
+  @Test
+  void givenAUserWithNotEnoughMoneyAndAFriendWhenSendUserTransactionThenTransactionAborted() throws Exception {
+    //Given
+    when(userTransactionService.createTransaction(any())).thenReturn(false);
+
+    //When
+    mockMvc.perform(post("/1/user_transactions"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("transactionAborted"))
+
+        .andExpect(content().string(containsString("Transaction aborted - Not enough money")));
   }
 }

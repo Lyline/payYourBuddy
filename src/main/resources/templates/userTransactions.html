@@ -34,20 +34,25 @@
     </div>
     <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
 
-        <form action="#" method="post">
-            <select class="form-select-sm">
+        <form th:action="@{/{id}/user_transactions(id=${user.id})}" method="post" th:object="${newTransaction}">
+            <select class="form-select-sm" th:field="*{creditorId}">
+                <div th:if="${#fields.hasErrors('creditorId')}" th:errors="*{creditorId}">Errors</div>
                 <option value="">Select your buddy</option>
                 <th:block th:each="friend :${friends}">
-                    <option th:text="${friend.firstName}+' '+${friend.lastName}">
+                    <option th:text="${friend.firstName}+' '+${friend.lastName}" th:value="${friend.userId}">
                         Friend name
                     </option>
                 </th:block>
             </select>
-            <input type="text" name="description" size="20px" placeholder="Description"/>
 
-            <input type="text" id="value" name="valueTransaction" size="10px" placeholder="Value">
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Errors</div>
+            <input type="text" name="description" size="20px" th:field="*{description}"/>
 
-            <input type="hidden" name="debtorUserId" field="user.userId"/>
+            <div th:if="${#fields.hasErrors('value')}" th:errors="*{description}">Errors</div>
+            <input type="text" id="value" name="valueTransaction" size="10px"
+                   placeholder="Value" th:field="*{value}">
+
+            <div type="hidden"  th:value="user.id" th:field="*{debtorId}"><span ></span></div>
 
             <button class="btn btn-success btn-lg" type="submit">Pay</button>
         </form>
