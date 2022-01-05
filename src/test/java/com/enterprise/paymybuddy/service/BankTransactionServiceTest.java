@@ -2,6 +2,7 @@ package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.BankTransactionCreationDTO;
 import com.enterprise.paymybuddy.entity.BankTransaction;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.BankTransactionRepository;
 import com.enterprise.paymybuddy.jpa.UserRepository;
@@ -24,7 +25,10 @@ class BankTransactionServiceTest {
 
   private final BankTransactionRepository transactionRepository =mock(BankTransactionRepository.class);
   private final UserRepository userRepository=mock(UserRepository.class);
-  private final BankTransactionServiceImpl classUnderTest=new BankTransactionServiceImpl(transactionRepository,userRepository);
+  private final CommissionServiceImpl commissionService=mock(CommissionServiceImpl.class);
+
+  private final BankTransactionServiceImpl classUnderTest=
+      new BankTransactionServiceImpl(transactionRepository,userRepository, commissionService);
 
   User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
 
@@ -79,10 +83,14 @@ class BankTransactionServiceTest {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",90.);
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"send","send transaction",90.);
+    Commission commission=new Commission(0.45);
 
     when(userRepository.getById(any())).thenReturn(user);
+    when(commissionService.calculate(anyDouble())).thenReturn(commission);
+
     when(userRepository.save(any())).thenReturn(user);
     when(transactionRepository.save(any())).thenReturn(newTransaction);
+    when(commissionService.save(any())).thenReturn(commission);
 
     //When
     boolean actual= classUnderTest.createTransaction(transactionDTO);
@@ -92,14 +100,18 @@ class BankTransactionServiceTest {
   }
 
   @Test
-  void givenAUserWithNotEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsTrue() {
+  void givenAUserWithNotEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsFalse() {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",1000.);
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"send","send transaction",1000.);
+    Commission commission=new Commission(5.);
 
     when(userRepository.getById(any())).thenReturn(user);
+    when(commissionService.calculate(anyDouble())).thenReturn(commission);
+
     when(userRepository.save(any())).thenReturn(user);
     when(transactionRepository.save(any())).thenReturn(newTransaction);
+    when(commissionService.save(any())).thenReturn(commission);
 
     //When
     boolean actual= classUnderTest.createTransaction(transactionDTO);
@@ -113,10 +125,14 @@ class BankTransactionServiceTest {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"receive transaction",1000.);
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"receive","receive transaction",1000.);
+    Commission commission=new Commission(5);
 
     when(userRepository.getById(any())).thenReturn(user);
+    when(commissionService.calculate(anyDouble())).thenReturn(commission);
+
     when(userRepository.save(any())).thenReturn(user);
     when(transactionRepository.save(any())).thenReturn(newTransaction);
+    when(commissionService.save(any())).thenReturn(commission);
 
     //When
     boolean actual= classUnderTest.createTransaction(transactionDTO);

@@ -2,6 +2,7 @@ package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.BankTransactionCreationDTO;
 import com.enterprise.paymybuddy.entity.BankTransaction;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.BankTransactionRepository;
 import com.enterprise.paymybuddy.jpa.UserRepository;
@@ -14,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class BankTransactionServiceImpl implements BankTransactionService{
   private final BankTransactionRepository transactionRepository;
   private final UserRepository userRepository;
+  private final CommissionServiceImpl commissionService;
 
   public BankTransactionServiceImpl(BankTransactionRepository transactionRepository,
-                                    UserRepository userRepository) {
+                                    UserRepository userRepository,
+                                    CommissionServiceImpl commissionService) {
     this.transactionRepository = transactionRepository;
     this.userRepository=userRepository;
+    this.commissionService=commissionService;
   }
 
   @Override
@@ -30,15 +34,16 @@ public class BankTransactionServiceImpl implements BankTransactionService{
   @Transactional
   public boolean createTransaction(BankTransactionCreationDTO transaction) {
     BankTransaction bankTransaction=new BankTransaction();
+    Commission commission=commissionService.calculate(transaction.getValue());
 
     User user= userRepository.getById(transaction.getUserId());
     double balance=user.getBalance();
 
     if (transaction.getType().equals("send")){
-      if(balance >= transaction.getValue()){
+      if(balance >= transaction.getValue()+ commission.getValue()){
 
         //subtract value transaction to balance
-        user.setBalance(balance-transaction.getValue());
+        user.setBalance(balance-transaction.getValue()- commission.getValue());
 
         //Construct bank transaction
         bankTransaction.setUser(user);
@@ -48,6 +53,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
         //Save data
         userRepository.save(user);
         transactionRepository.save(bankTransaction);
+        commissionService.save(commission);
 
         return true;
       }
@@ -55,7 +61,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
 
     if (transaction.getType().equals("receive")){
       //add value transaction to balance
-      user.setBalance(balance+transaction.getValue());
+      user.setBalance(balance+transaction.getValue()- commission.getValue());
 
       //Construct bank transaction
       bankTransaction.setUser(user);
@@ -65,6 +71,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
       //Save data
       userRepository.save(user);
       transactionRepository.save(bankTransaction);
+      commissionService.save(commission);
 
       return true;
     }

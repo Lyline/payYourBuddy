@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.UserTransactionCreationDTO;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
 import com.enterprise.paymybuddy.jpa.UserRepository;
@@ -23,7 +24,10 @@ class UserTransactionServiceTest {
 
   private final UserTransactionRepository transactionRepository =mock(UserTransactionRepository.class);
   private final UserRepository userRepository= mock(UserRepository.class);
-  private final UserTransactionServiceImpl classUnderTest=new UserTransactionServiceImpl(transactionRepository,userRepository);
+  private final CommissionServiceImpl commissionService=mock(CommissionServiceImpl.class);
+
+  private final UserTransactionServiceImpl classUnderTest=
+      new UserTransactionServiceImpl(transactionRepository, userRepository,commissionService);
 
   User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
   User user1=new User("Steve","Rogers","steve@test.com","pw","bank",100.);
@@ -36,8 +40,6 @@ class UserTransactionServiceTest {
   void setUp() {
     user.setUserId(1L);
     user1.setUserId(2L);
-
-
   }
 
   @Test
@@ -83,6 +85,8 @@ class UserTransactionServiceTest {
     //Given
     UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
 
+    Commission commission=new Commission(0.05);
+
     UserTransaction transaction=new UserTransaction();
     transaction.setDebtor(user);
     transaction.setCreditor(user1);
@@ -91,14 +95,17 @@ class UserTransactionServiceTest {
 
     when(userRepository.getById(transactionDTO.getDebtorId())).thenReturn(user);
     when(userRepository.getById(transactionDTO.getCreditorId())).thenReturn(user1);
+    when(commissionService.calculate(anyDouble())).thenReturn(commission);
 
     when(transactionRepository.save(any())).thenReturn(transaction);
+    when(commissionService.save(any())).thenReturn(commission);
 
     //When
     classUnderTest.createTransaction(transactionDTO);
 
     //Then
-    assertThat(user.getBalance()).isEqualTo(90.);
+    //Balance's debtor : current value= transaction value - commission
+    assertThat(user.getBalance()).isEqualTo(89.95);
     assertThat(user1.getBalance()).isEqualTo(110.);
   }
 
@@ -109,6 +116,8 @@ class UserTransactionServiceTest {
 
     UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
 
+    Commission commission=new Commission(0.05);
+
     UserTransaction transaction=new UserTransaction();
     transaction.setDebtor(user);
     transaction.setCreditor(user1);
@@ -117,8 +126,10 @@ class UserTransactionServiceTest {
 
     when(userRepository.getById(transactionDTO.getDebtorId())).thenReturn(user);
     when(userRepository.getById(transactionDTO.getCreditorId())).thenReturn(user1);
+    when(commissionService.calculate(anyDouble())).thenReturn(commission);
 
     when(transactionRepository.save(any())).thenReturn(transaction);
+    when(commissionService.save(any())).thenReturn(commission);
 
     //When
     boolean actual=classUnderTest.createTransaction(transactionDTO);

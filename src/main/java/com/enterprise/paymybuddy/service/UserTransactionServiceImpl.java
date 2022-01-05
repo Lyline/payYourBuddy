@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.UserTransactionCreationDTO;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
 import com.enterprise.paymybuddy.jpa.UserRepository;
@@ -14,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserTransactionServiceImpl implements UserTransactionService{
   private final UserTransactionRepository transactionRepository;
   private final UserRepository userRepository;
+  private final CommissionServiceImpl commissionService;
 
   public UserTransactionServiceImpl(UserTransactionRepository transactionRepository,
-                                    UserRepository userRepository) {
+                                    UserRepository userRepository, CommissionServiceImpl commissionService) {
     this.transactionRepository = transactionRepository;
     this.userRepository=userRepository;
+    this.commissionService = commissionService;
   }
 
   @Override
@@ -32,6 +35,8 @@ public class UserTransactionServiceImpl implements UserTransactionService{
   public boolean createTransaction(UserTransactionCreationDTO transactionForm) {
     UserTransaction transaction=new UserTransaction();
 
+    Commission commission=commissionService.calculate(transactionForm.getValue());
+
     //get debtor id
     User debtor= userRepository.getById(transactionForm.getDebtorId());
     double debtorBalance= debtor.getBalance();
@@ -41,10 +46,10 @@ public class UserTransactionServiceImpl implements UserTransactionService{
     double creditorBalance= creditor.getBalance();
 
     try {
-      if (debtorBalance>= transactionForm.getValue()){
+      if (debtorBalance>= transactionForm.getValue()+ commission.getValue()){
 
         //subtract transaction value to debtor balance
-        debtor.setBalance(debtorBalance-transactionForm.getValue());
+        debtor.setBalance(debtorBalance-transactionForm.getValue()- commission.getValue());
 
         //add transaction value to creditor balance
         creditor.setBalance(creditorBalance+transactionForm.getValue());
@@ -62,6 +67,8 @@ public class UserTransactionServiceImpl implements UserTransactionService{
         transaction.setValue(transactionForm.getValue());
 
         transactionRepository.save(transaction);
+
+        commissionService.save(commission);
 
       }else throw new ArithmeticException();
     } catch (ArithmeticException e) {
