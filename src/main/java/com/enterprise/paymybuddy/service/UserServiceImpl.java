@@ -1,8 +1,10 @@
 package com.enterprise.paymybuddy.service;
 
+import com.enterprise.paymybuddy.dto.FriendConnexion;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,5 +22,17 @@ public class UserServiceImpl implements UserService{
   public Optional<User> getUser(Long id){
     return Optional.ofNullable(repository.findById(id)
         .orElseThrow(()->new NoSuchElementException("User id "+id+" not found")));
+  }
+
+  @Override
+  @Transactional
+  public boolean createFriend(User user, FriendConnexion friendConnexion) {
+    User friend = repository.getUserByEmail(friendConnexion.getEmail());
+
+    if (friend != null) {
+      user.getFriends().add(friend);
+      repository.save(user);
+      return true;
+    } else return false;
   }
 }

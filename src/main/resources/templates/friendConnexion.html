@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay my Buddy - Add new friend</title>
+</head>
+<body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pay my Buddy - Add new Buddy</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+</head>
+<body>
+<header>
+    <div class="d-flex justify-content-between" style="padding:15px; ">
+        <h1 class="bg-success btn-lg text-white">Pay my buddy</h1>
+        <nav class="nav justify-content-between align-content-center" style="width: 50%;">
+            <a th:href="@{/{id}(id=${user.id})}">Home</a>
+            <a th:href="@{/{id}/user_transactions(id=${user.id})}">Buddy Money</a>
+            <a th:href="@{/{id}/bank_transactions(id=${user.id})}">Sweety bank</a>
+            <a th:href="@{/{id}/profile(id=${user.id})}">Profile</a>
+            <a href="">Contact</a>
+            <a href="">Log off</a>
+        </nav>
+    </div>
+    <nav class="nav bg-light" style="padding-left: 15px;">
+        <a class="nav-link active" th:href="@{/{id}(id=${user.id})}">Home</a>
+        <a class="nav-link disabled">&rarr; Add new Buddy</a>
+    </nav>
+</header>
+<main class="container">
+    <p class="d-flex justify-content-end">Hi, <span th:text="${user.firstName}">User</span></p>
+    <div>
+        <h3>Find your buddy</h3>
+        <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
+
+            <form method="post" th:action="@{/{id}/add_friend(id=${user.id})}"
+                  th:object="${connexion}">
+                <label for="email">Email :</label>
+                <input type="email" name="" id="email" th:field="*{email}" required>
+                <button class="btn btn-success" type="submit">Search and Add</button>
+            </form>
+
+
+        </div>
+    </div>
+    <div class="d-flex justify-content-center" th:if="${connexion.email}!=null">
+        <span class="alert alert-success text-center" th:if="${connexion.isValidation()}"
+              th:text="'user found and added'"></span>
+        <span class="alert alert-danger text-center" th:if="${!connexion.isValidation()}"
+              th:text="'user not found'"></span>
+    </div>
+
+</main>
+</body>
+</html>

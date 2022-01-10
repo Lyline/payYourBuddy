@@ -30,7 +30,7 @@
     <p class="d-flex justify-content-end">Hi, <span th:text="${user.firstName}">User</span></p>
     <div class="d-flex justify-content-between">
         <h3>Pay your buddy</h3>
-        <button class="btn btn-primary" type="button">Add Connection</button>
+        <a th:href="@{/{id}/add_friend(id=${user.id})}" class="btn btn-primary" type="button">Add Connection</a>
     </div>
     <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
 
