@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay your buddy</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <img src="/images/logo.png" alt="logo.png" class="img-fluid card-img-top">
+      <div class="card-title text-center"><span class="display-6">Logging</span></div>
+      <div class="card-body">
+        <form method="post" th:href="@{/{id}(id=user.id)}" th:object="${logging}">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email :</label>
+            <input type="email" class="form-control" id="email"
+                   aria-describedby="emailHelp" required th:field="*{email}">
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password :</label>
+            <input type="password" class="form-control" id="password" required
+                   th:field="*{password}">
+          </div>
+          <button type="submit" class="btn btn-primary">Connect</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

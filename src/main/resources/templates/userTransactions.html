@@ -18,7 +18,7 @@
             <a th:href="@{/{id}/bank_transactions(id=${user.id})}">Sweety bank</a>
             <a th:href="@{/{id}/profile(id=${user.id})}">Profile</a>
             <a href="">Contact</a>
-            <a href="">Log off</a>
+            <a href="/">Log off</a>
         </nav>
     </div>
     <nav class="nav bg-light" style="padding-left: 15px;">
@@ -46,7 +46,7 @@
             </select>
 
             <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Errors</div>
-            <input type="text" name="description" size="20px" th:field="*{description}"/>
+            <input type="text" name="description" size="20px" placeholder="description" th:field="*{description}"/>
 
             <div th:if="${#fields.hasErrors('value')}" th:errors="*{description}">Errors</div>
             <input type="text" id="value" name="valueTransaction" size="10px"
