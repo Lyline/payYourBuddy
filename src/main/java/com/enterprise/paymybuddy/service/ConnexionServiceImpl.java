@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.enterprise.paymybuddy.service.HashService.getHash;
+
 @Service
 public class ConnexionServiceImpl implements ConnexionService {
   private final UserRepository repository;
@@ -17,7 +19,10 @@ public class ConnexionServiceImpl implements ConnexionService {
 
   @Override
   public User connect(UserConnexionDTO logging) {
-    Optional<User> user=repository.getUserByEmailAndPassword(logging.getEmail(),logging.getPassword());
+    String emailEncoded= getHash(logging.getEmail());
+    String passwordEncoded= getHash(logging.getPassword());
+
+    Optional<User> user=repository.getUserByEmailAndPassword(emailEncoded,passwordEncoded);
 
     return user.orElse(null);
   }

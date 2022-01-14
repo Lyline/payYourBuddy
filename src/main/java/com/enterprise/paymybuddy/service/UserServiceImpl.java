@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.enterprise.paymybuddy.service.HashService.getHash;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -28,7 +30,9 @@ public class UserServiceImpl implements UserService{
   @Override
   @Transactional
   public boolean createFriend(User user, FriendConnexion friendConnexion) {
-    User friend = repository.getUserByEmail(friendConnexion.getEmail());
+    String emailEncoded=getHash(friendConnexion.getEmail());
+
+    User friend = repository.getUserByEmail(emailEncoded);
 
     if (friend != null) {
       user.getFriends().add(friend);
@@ -43,9 +47,11 @@ public class UserServiceImpl implements UserService{
     User response=repository.getUserByEmail(inscription.getEmail());
 
     if (response==null){
+      String emailEncoded= getHash(inscription.getEmail());
+      String passwordEncoded= getHash(inscription.getPassword());
+
       User user= new User(inscription.getFirstName(), inscription.getLastName(),
-          inscription.getEmail(), inscription.getPassword(),
-          inscription.getBankAccount(),0);
+          emailEncoded, passwordEncoded,inscription.getBankAccount(),0);
 
       repository.save(user);
       return true;

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.enterprise.paymybuddy.service.HashService.getHash;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,7 +67,7 @@ class UserServiceTest {
     //Then
     assertTrue(actual);
     assertThat(user.getFriends().size()).isEqualTo(1);
-    verify(repository,times(1)).getUserByEmail("steve@test.com");
+    verify(repository,times(1)).getUserByEmail(getHash(friendConnexion.getEmail()));
     verify(repository,times(1)).save(user);
   }
 
@@ -86,15 +87,17 @@ class UserServiceTest {
     //Then
     assertFalse(actual);
     assertThat(user.getFriends().size()).isEqualTo(0);
-    verify(repository,times(1)).getUserByEmail("steve@test.com");
+    verify(repository,times(1)).getUserByEmail(getHash(friendConnexion.getEmail()));
     verify(repository,times(0)).save(user);
   }
 
   @Test
   void givenAPersonWhenCreateAccountWithValidInformationsThenReturnTrue() {
     //Given
-    User user=new User("Tony","Stark","test@email.com",
-        "pw","bank",0);
+    User user=new User("Tony","Stark",
+        "73062d872926c2a556f17b36f50e328ddf9bff9d403939bd14b6c3b7f5a33fc2",
+        "30c952fab122c3f9759f02a6d95c3758b246b4fee239957b2d4fee46e26170c4",
+        "bank",0);
 
     RegisterDTO inscription=new RegisterDTO();
     inscription.setFirstName("Tony");
