@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay your buddy - Register</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container d-flex justify-content-around">
+    <div class="card mt-5 col-6">
+        <img src="/images/logo.png" alt="logo.png" class="img-fluid card-img-top">
+
+        <div class="card-title text-center">
+            <span class="display-6">Welcome Guy, register !  </span>
+        </div>
+        <div class="card-body">
+            <form class="justify-content-center" method="post" th:action="@{/register}" th:object="${inscription}">
+                <div class="mb-3">
+                    <label class="form-label" for="firstName">First name :</label>
+                    <input class="form-control" type="text" id="firstName" required th:field="*{firstName}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="lastName">Last name :</label>
+                    <input class="form-control" type="text" id="lastName" required th:field="*{lastName}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email :</label>
+                    <input class="form-control" type="email" id="email" required th:field="*{email}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="password">Password :</label>
+                    <input class="form-control" type="text" id="password" th:field="*{password}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="bankAccount">Bank account :</label>
+                    <input class="form-control" type="text" id="bankAccount" th:field="*{bankAccount}">
+                </div>
+
+                <div class="text-center">
+                    <div class="mb-3" th:if="${inscription.getEmail()}==null">
+                        <button class="btn btn-success" type="submit">Create</button>
+                    </div>
+                    <div th:if="${inscription.getEmail()}!=null">
+                        <div th:if="${!inscription.isValidation()}">
+                            <span class="alert alert-danger text-center col-10"> Sorry, this email already exist</span>
+                            <button class="btn btn-success" type="submit">Create</button>
+                        </div>
+
+                        <div th:if="${inscription.isValidation()}">
+                            <span class="alert alert-success text-center col-10"> You are created in the matrix !</span>
+                            <a class="btn btn-success" href="/"> Logging Now</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

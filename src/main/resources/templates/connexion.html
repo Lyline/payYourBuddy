@@ -11,7 +11,11 @@
   <div class="container">
     <div class="card">
       <img src="/images/logo.png" alt="logo.png" class="img-fluid card-img-top">
-      <div class="card-title text-center"><span class="display-6">Logging</span></div>
+
+      <div class="card-title text-center">
+        <span class="display-6">Logging</span>
+      </div>
+
       <div class="card-body">
         <form method="post" th:href="@{/{id}(id=user.id)}" th:object="${logging}">
           <div class="mb-3">
@@ -25,7 +29,10 @@
             <input type="password" class="form-control" id="password" required
                    th:field="*{password}">
           </div>
-          <button type="submit" class="btn btn-primary">Connect</button>
+          <div class="d-flex justify-content-around">
+            <button type="submit" class="btn btn-primary">Connect</button>
+            <a class="btn btn-primary" href="/register">Create account</a>
+          </div>
         </form>
       </div>
     </div>

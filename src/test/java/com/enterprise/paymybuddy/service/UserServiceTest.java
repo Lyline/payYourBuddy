@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.FriendConnexion;
+import com.enterprise.paymybuddy.dto.RegisterDTO;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -86,6 +87,56 @@ class UserServiceTest {
     assertFalse(actual);
     assertThat(user.getFriends().size()).isEqualTo(0);
     verify(repository,times(1)).getUserByEmail("steve@test.com");
+    verify(repository,times(0)).save(user);
+  }
+
+  @Test
+  void givenAPersonWhenCreateAccountWithValidInformationsThenReturnTrue() {
+    //Given
+    User user=new User("Tony","Stark","test@email.com",
+        "pw","bank",0);
+
+    RegisterDTO inscription=new RegisterDTO();
+    inscription.setFirstName("Tony");
+    inscription.setLastName("Stark");
+    inscription.setEmail("test@email.com");
+    inscription.setPassword("pw");
+    inscription.setBankAccount("bank");
+
+   when(repository.getUserByEmail(anyString())).thenReturn(null);
+
+    //When
+    boolean actual= classUnderTest.createUser(inscription);
+
+    //Then
+    assertTrue(actual);
+    verify(repository,times(1)).getUserByEmail(inscription.getEmail());
+    verify(repository,times(1)).save(user);
+  }
+
+  @Test
+  void givenAPersonWhenCreateAccountWithExistEmailThenReturnFalse() {
+    //Given
+    User user=new User("Tony","Stark","test@email.com",
+        "pw","bank",0);
+    User userExist=new User("John","Doe","test@email.com",
+        "pw","bank",0);
+
+    RegisterDTO inscription=new RegisterDTO();
+    inscription.setFirstName("Tony");
+    inscription.setLastName("Stark");
+    inscription.setEmail("test@email.com");
+    inscription.setPassword("pw");
+    inscription.setBankAccount("bank");
+
+    when(repository.getUserByEmail(anyString())).thenReturn(userExist);
+
+    //When
+    boolean actual= classUnderTest.createUser(inscription);
+
+    //Then
+    assertFalse(actual);
+    verify(repository,times(1)).getUserByEmail(inscription.getEmail());
     verify(repository,times(0)).save(user);
   }
 }

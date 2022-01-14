@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.service;
 
 import com.enterprise.paymybuddy.dto.FriendConnexion;
+import com.enterprise.paymybuddy.dto.RegisterDTO;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.UserRepository;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,21 @@ public class UserServiceImpl implements UserService{
       repository.save(user);
       return true;
     } else return false;
+  }
+
+  @Override
+  @Transactional
+  public boolean createUser(RegisterDTO inscription) {
+    User response=repository.getUserByEmail(inscription.getEmail());
+
+    if (response==null){
+      User user= new User(inscription.getFirstName(), inscription.getLastName(),
+          inscription.getEmail(), inscription.getPassword(),
+          inscription.getBankAccount(),0);
+
+      repository.save(user);
+      return true;
+    }
+    return false;
   }
 }
