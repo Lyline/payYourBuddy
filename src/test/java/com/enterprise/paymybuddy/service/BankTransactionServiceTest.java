@@ -51,7 +51,7 @@ class BankTransactionServiceTest {
     transactions.add(transaction1);
 
     Page<BankTransaction> page=new PageImpl<>(transactions);
-    when(transactionRepository.findBankTransactionsByUserUserId(any(),any(PageRequest.class)))
+    when(transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
         .thenReturn(page);
 
     //When
@@ -60,13 +60,13 @@ class BankTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(2);
     verify(transactionRepository,times(1))
-        .findBankTransactionsByUserUserId(1L, PageRequest.of(0,3));
+        .findBankTransactionsByUserUserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
   }
 
   @Test
   void givenAUserWithoutBankTransactionWhenGetAllTransactionThenPageIsEmpty() {
     //Given
-    when(transactionRepository.findBankTransactionsByUserUserId(any(),any(PageRequest.class)))
+    when(transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
         .thenReturn(Page.empty());
 
     //When
@@ -75,7 +75,7 @@ class BankTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(0);
     verify(transactionRepository,times(1))
-        .findBankTransactionsByUserUserId(1L, PageRequest.of(0,3));
+        .findBankTransactionsByUserUserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
   }
 
   @Test

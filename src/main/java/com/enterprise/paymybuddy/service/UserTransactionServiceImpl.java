@@ -29,7 +29,7 @@ public class UserTransactionServiceImpl implements UserTransactionService{
 
   @Override
   public Page<UserTransaction> getAllTransactions(Long id, Pageable pageable) {
-    return transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(id,id,pageable);
+    return transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(id,id,pageable);
   }
 
   @Override

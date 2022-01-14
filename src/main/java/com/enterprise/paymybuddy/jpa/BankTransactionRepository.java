@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface BankTransactionRepository extends JpaRepository<BankTransaction,Long> {
-  Page<BankTransaction> findBankTransactionsByUserUserId(Long id, Pageable pageable);
+  Page<BankTransaction> findBankTransactionsByUserUserIdOrderByTransactionIdDesc(Long id, Pageable pageable);
   List<BankTransaction> findBankTransactionsByUserUserId(Long id);
 }

@@ -53,7 +53,7 @@ class UserTransactionServiceTest {
 
     Page<UserTransaction>page=new PageImpl<>(transactions);
 
-    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(any(),any(),any(PageRequest.class)))
         .thenReturn(page);
 
     //When
@@ -62,13 +62,13 @@ class UserTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(2);
     verify(transactionRepository,times(1))
-        .findUserTransactionsByCreditor_UserIdOrDebtor_UserId(1L,1L,PageRequest.of(0,3));
+        .findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(1L,1L,PageRequest.of(0,3));
   }
 
   @Test
   void givenAnUserWithoutUserTransactionWhenGetAllTransactionThenPageIsEmpty() {
     //Given
-    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(any(),any(),any(PageRequest.class)))
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(any(),any(),any(PageRequest.class)))
         .thenReturn(Page.empty());
 
     //When
@@ -77,7 +77,7 @@ class UserTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(0);
     verify(transactionRepository,times(1))
-        .findUserTransactionsByCreditor_UserIdOrDebtor_UserId(1L,1L,PageRequest.of(0,3));
+        .findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(1L,1L,PageRequest.of(0,3));
   }
 
   @Test

@@ -30,7 +30,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
 
   @Override
   public Page<BankTransaction> getAllTransactions(Long id, Pageable pageable) {
-    return transactionRepository.findBankTransactionsByUserUserId(id,pageable);
+    return transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(id,pageable);
   }
 
   public BankTransaction getLastTransaction(Long id){
