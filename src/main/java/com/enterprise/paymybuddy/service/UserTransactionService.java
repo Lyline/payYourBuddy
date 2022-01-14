@@ -7,5 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserTransactionService {
   Page<UserTransaction> getAllTransactions(Long id, Pageable pageable);
+  UserTransaction getLastTransaction(Long id);
   boolean createTransaction(UserTransactionCreationDTO transaction);
 }

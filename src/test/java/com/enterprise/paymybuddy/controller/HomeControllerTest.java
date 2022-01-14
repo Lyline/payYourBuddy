@@ -3,7 +3,9 @@ package com.enterprise.paymybuddy.controller;
 import com.enterprise.paymybuddy.entity.BankTransaction;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
+import com.enterprise.paymybuddy.service.BankTransactionServiceImpl;
 import com.enterprise.paymybuddy.service.UserServiceImpl;
+import com.enterprise.paymybuddy.service.UserTransactionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,6 +27,13 @@ class HomeControllerTest {
   @MockBean
   private UserServiceImpl userServiceImpl;
 
+  @MockBean
+  private UserTransactionServiceImpl transactionService;
+
+  @MockBean
+  private BankTransactionServiceImpl bankTransactionService;
+
+
   @Test
   void homeControllerWithTransactionsTest() throws Exception {
     User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
@@ -32,11 +42,9 @@ class HomeControllerTest {
     UserTransaction userTransaction=new UserTransaction(1L,user,user1,"new transaction3",30.);
     BankTransaction bankTransaction=new BankTransaction(1L,user,"bank transaction1",-30.);
 
-    user.getUserTransactions().add(userTransaction);
-    user.getBankTransactions().add(bankTransaction);
-    user.getFriends().add(user1);
-
     when(userServiceImpl.getUser(1L)).thenReturn(java.util.Optional.of(user));
+    when(transactionService.getLastTransaction(anyLong())).thenReturn(userTransaction);
+    when(bankTransactionService.getLastTransaction(anyLong())).thenReturn(bankTransaction);
 
     mockMvc.perform(get("/1"))
         .andExpect(status().isOk())
@@ -62,6 +70,8 @@ class HomeControllerTest {
     User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
 
     when(userServiceImpl.getUser(1L)).thenReturn(java.util.Optional.of(user));
+    when(transactionService.getLastTransaction(anyLong())).thenReturn(new UserTransaction());
+    when(bankTransactionService.getLastTransaction(anyLong())).thenReturn(new BankTransaction());
 
     mockMvc.perform(get("/1"))
         .andExpect(status().isOk())

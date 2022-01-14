@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 public class UserTransactionServiceImpl implements UserTransactionService{
   private final UserTransactionRepository transactionRepository;
@@ -25,9 +28,17 @@ public class UserTransactionServiceImpl implements UserTransactionService{
   }
 
   @Override
-
   public Page<UserTransaction> getAllTransactions(Long id, Pageable pageable) {
     return transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(id,id,pageable);
+  }
+
+  @Override
+  public UserTransaction getLastTransaction(Long id){
+    List<UserTransaction> transactions=transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(id,id);
+
+    return transactions.stream()
+        .max(Comparator.comparing(UserTransaction::getTransactionId))
+        .orElse(new UserTransaction());
   }
 
   @Override
