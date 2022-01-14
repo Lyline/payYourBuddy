@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -87,13 +86,8 @@ public class TransactionController{
   @PostMapping("/user_transactions")
   public String processUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
                                        @PathVariable Long id,
-                                       Model model,
-                                       BindingResult bindingResult){
+                                       Model model){
     transaction.setDebtorId(id);
-
-    if (bindingResult.hasErrors()) {
-      return "userTransactions";
-    }
 
     boolean transactionValidated=userTransactionService.createTransaction(transaction);
     model.addAttribute("id",id);
@@ -140,13 +134,8 @@ public class TransactionController{
   @PostMapping("/bank_transactions")
   public String processBankTransaction(@Valid @ModelAttribute("newTransaction")BankTransactionCreationDTO transaction,
                                        @PathVariable Long id,
-                                       Model model,
-                                       BindingResult bindingResult){
+                                       Model model){
     transaction.setUserId(id);
-
-    if (bindingResult.hasErrors()) {
-      return "bankTransactions";
-    }
 
     boolean transactionValidated=bankTransactionService.createTransaction(transaction);
     model.addAttribute("id",id);

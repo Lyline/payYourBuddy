@@ -34,21 +34,19 @@
     <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
 
         <form th:action="@{/{id}/bank_transactions(id=${user.id})}" method="post" th:object="${newTransaction}">
-            <select class="form-select-sm" th:field="*{type}">
-                <!--<div th:if="${#fields.hasErrors('creditorId')}" th:errors="*{creditorId}">Errors</div>-->
+            <label for="transactionType"></label>
+            <select class="form-select-sm" id="transactionType" th:field="*{type}">
                 <option value="">Select your transfert</option>
                 <option th:value="send">Send money</option>
                 <option th:value="receive">Receive money</option>
             </select>
 
-           <!-- <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Errors</div>-->
-            <input type="text" name="description" size="20px" placeholder="description" th:field="*{description}"/>
+            <label hidden="hidden" for="description"></label>
+            <input type="text" id="description" size="20px" placeholder="description" th:field="*{description}"/>
 
-           <!-- <div th:if="${#fields.hasErrors('value')}" th:errors="*{description}">Errors</div>-->
+            <label hidden="hidden" for="value"></label>
             <input type="text" id="value" name="valueTransaction" size="10px"
                    placeholder="Value" th:field="*{value}">
-
-            <!--<div type="hidden"  th:value="user.id" th:field="*{debtorId}"><span ></span></div>-->
 
             <button class="btn btn-success btn-lg" type="submit">Pay</button>
         </form>
@@ -64,7 +62,7 @@
             </thead>
 
             <tbody>
-            <tr class="text-center" scope="row" th:each="bankTransaction:${bankTransactions}">
+            <tr class="text-center" th:each="bankTransaction:${bankTransactions}">
                 <td th:text="
                     ${bankTransactions.getTotalElements()!=0}
                         ? ${bankTransaction.description}">content</td>
