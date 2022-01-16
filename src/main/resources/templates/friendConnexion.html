@@ -46,7 +46,7 @@
         <span class="alert alert-success text-center" th:if="${connexion.isValidation()}"
               th:text="'user found and added'"></span>
         <span class="alert alert-danger text-center" th:if="${!connexion.isValidation()}"
-              th:text="'user not found'"></span>
+              th:text="'user not found or friend already added'"></span>
     </div>
 
 </main>

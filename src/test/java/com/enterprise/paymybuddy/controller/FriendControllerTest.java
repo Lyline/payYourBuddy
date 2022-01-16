@@ -82,4 +82,28 @@ class FriendControllerTest {
 
         .andExpect(content().string(containsString("user not found")));
   }
+
+  @Test
+  void givenAUserWithAAlreadyAddedFriendWhenCreateFriendConnexionThenFriendNotAddedDisplayed() throws Exception {
+    //Given
+    User user=new User("Tony","Stark","tony@test.com",
+        "pw","bank",100.);
+    user.setUserId(1L);
+    User friend=new User("Steve","Roger","steve@test.com","pw","bank",100.);
+    friend.setUserId(2L);
+
+    user.getFriends().add(friend);
+
+    when(userService.getUser(any())).thenReturn(java.util.Optional.of(user));
+    when(userService.createFriend(any(),any())).thenReturn(false);
+
+    //When
+    mockMvc.perform(post(("/1/add_friend"))
+            .param("email","steve@test.com"))
+
+        .andExpect(status().isOk())
+        .andExpect(view().name("friendConnexion"))
+
+        .andExpect(content().string(containsString("friend already added")));
+  }
 }

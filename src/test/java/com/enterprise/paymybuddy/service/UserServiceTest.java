@@ -92,6 +92,29 @@ class UserServiceTest {
   }
 
   @Test
+  void givenAUserAndAAlreadyExistFriendWhenCreateFriendThenFriendLinkNotDuplicated() {
+    //Given
+    User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
+    User friend=new User("Steve","Roger","steve@test.com","pw","bank",100.);
+
+    user.getFriends().add(friend);
+
+    FriendConnexion friendConnexion=new FriendConnexion();
+    friendConnexion.setEmail("steve@test.com");
+
+    when(repository.getUserByEmail(anyString())).thenReturn(friend);
+
+    //When
+    boolean actual= classUnderTest.createFriend(user,friendConnexion);
+
+    //Then
+    assertFalse(actual);
+    assertThat(user.getFriends().size()).isEqualTo(1);
+    verify(repository,times(1)).getUserByEmail(getHash(friendConnexion.getEmail()));
+    verify(repository,times(0)).save(user);
+  }
+
+  @Test
   void givenAPersonWhenCreateAccountWithValidInformationsThenReturnTrue() {
     //Given
     User user=new User("Tony","Stark",

@@ -35,9 +35,12 @@ public class UserServiceImpl implements UserService{
     User friend = repository.getUserByEmail(emailEncoded);
 
     if (friend != null) {
-      user.getFriends().add(friend);
-      repository.save(user);
-      return true;
+      if (!user.getFriends().contains(friend)){
+        user.getFriends().add(friend);
+        repository.save(user);
+        return true;
+      }else return false;
+
     } else return false;
   }
 
