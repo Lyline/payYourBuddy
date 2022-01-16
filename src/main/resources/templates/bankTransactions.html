@@ -34,19 +34,22 @@
     <div class="bg-light d-flex justify-content-evenly" style="margin-bottom: 50px; padding: 50px;">
 
         <form th:action="@{/{id}/bank_transactions(id=${user.id})}" method="post" th:object="${newTransaction}">
-            <label for="transactionType"></label>
-            <select class="form-select-sm" id="transactionType" th:field="*{type}">
+            <label for="type"></label>
+            <select class="form-select-sm" id="type" required th:field="*{type}">
                 <option value="">Select your transfert</option>
                 <option th:value="send">Send money</option>
                 <option th:value="receive">Receive money</option>
             </select>
 
             <label hidden="hidden" for="description"></label>
-            <input type="text" id="description" size="20px" placeholder="description" th:field="*{description}"/>
+            <input type="text" id="description" size="20px" placeholder="description" required
+                   th:field="*{description}"/>
 
             <label hidden="hidden" for="value"></label>
             <input type="text" id="value" name="valueTransaction" size="10px"
-                   placeholder="Value" th:field="*{value}">
+                   placeholder="Value"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                   required th:field="*{value}">
 
             <button class="btn btn-success btn-lg" type="submit">Pay</button>
         </form>
