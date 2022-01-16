@@ -1,7 +1,9 @@
 package com.enterprise.paymybuddy.entity;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class User {
   private String email;
 
   @Column(columnDefinition = "varchar (255)", nullable = false)
+  @Setter(AccessLevel.NONE)
   private String password;
 
   @Column(columnDefinition = "varchar (255)", nullable = false)
@@ -38,12 +41,15 @@ public class User {
   private double balance;
 
   @OneToMany(mappedBy = "debtor",cascade = CascadeType.ALL)
+  @Setter(AccessLevel.NONE)
   private List<UserTransaction> userTransactions=new ArrayList<>();
 
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  @Setter(AccessLevel.NONE)
   private List<BankTransaction> bankTransactions=new ArrayList<>();
 
   @ManyToMany(targetEntity = User.class)
+  @Setter(AccessLevel.NONE)
   private List<User> friends=new ArrayList<>();
 
   public User(String firstName, String lastName, String email,
@@ -54,18 +60,5 @@ public class User {
     this.password = password;
     this.bankAccount = bankAccount;
     this.balance = balance;
-  }
-
-  @Override
-  public String toString() {
-    return "User{" +
-        "userId=" + userId +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        ", email='" + email + '\'' +
-        ", password='" + password + '\'' +
-        ", bankAccount='" + bankAccount + '\'' +
-        ", balance=" + balance +
-        '}';
   }
 }

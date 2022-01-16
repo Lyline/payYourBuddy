@@ -1,11 +1,13 @@
 package com.enterprise.paymybuddy.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @RequiredArgsConstructor
 @Entity
 @Table(name = "user_transaction")
