@@ -79,6 +79,38 @@ class BankTransactionServiceTest {
   }
 
   @Test
+  void givenAnUserWithTwoTransactionsWhenGetLastTransactionThenReturnTheLastTransactionRecorded() {
+    //Given
+    List<BankTransaction>transactions=new ArrayList<>();
+    transactions.add(transaction);
+    transactions.add(transaction1);
+
+    when(transactionRepository.findBankTransactionsByUserUserId(anyLong()))
+        .thenReturn(transactions);
+
+    //When
+    BankTransaction actual= classUnderTest.getLastTransaction(1L);
+
+    //Then
+    assertThat(actual).isEqualTo(transaction1);
+  }
+
+  @Test
+  void givenAnUserWithoutTransactionWhenGetLastTransactionThenReturnNewTransaction() {
+    //Given
+    List<BankTransaction>transactions=new ArrayList<>();
+
+    when(transactionRepository.findBankTransactionsByUserUserId(anyLong()))
+        .thenReturn(transactions);
+
+    //When
+    BankTransaction actual= classUnderTest.getLastTransaction(1L);
+
+    //Then
+    assertThat(actual.getTransactionId()).isEqualTo(null);
+  }
+
+  @Test
   void givenAUserWithEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsTrue() {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",90.);

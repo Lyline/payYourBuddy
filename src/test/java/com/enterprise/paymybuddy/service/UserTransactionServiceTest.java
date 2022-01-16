@@ -81,6 +81,38 @@ class UserTransactionServiceTest {
   }
 
   @Test
+  void givenAnUserWithTwoTransactionsWhenGetLastTransactionThenReturnTheLastTransactionRecorded() {
+    //Given
+    List<UserTransaction>transactions=new ArrayList<>();
+    transactions.add(transaction);
+    transactions.add(transaction1);
+
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(anyLong(),anyLong()))
+        .thenReturn(transactions);
+
+    //When
+    UserTransaction actual= classUnderTest.getLastTransaction(1L);
+
+    //Then
+    assertThat(actual).isEqualTo(transaction1);
+  }
+
+  @Test
+  void givenAnUserWithoutTransactionWhenGetLastTransactionThenReturnNewTransaction() {
+    //Given
+    List<UserTransaction>transactions=new ArrayList<>();
+
+    when(transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(anyLong(),anyLong()))
+        .thenReturn(transactions);
+
+    //When
+    UserTransaction actual= classUnderTest.getLastTransaction(1L);
+
+    //Then
+    assertThat(actual.getTransactionId()).isEqualTo(null);
+  }
+
+  @Test
   void givenADebtorWithMoneyAndACreditorWhenCreateTransactionThenTransactionSaved() {
     //Given
     UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
