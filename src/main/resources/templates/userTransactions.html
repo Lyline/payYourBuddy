@@ -85,8 +85,8 @@
 
                 <td th:text="${userTransactions.getTotalElements()!=0}
                                 ?(${transaction.debtor.id==user.id}
-                                    ? '-'+${transaction.value}
-                                    : '+'+${transaction.value})">value</td>
+                                    ? '-'+${#numbers.formatDecimal(transaction.value,0,'COMMA',2,'POINT')}
+                                    : '+'+${#numbers.formatDecimal(transaction.value,0,'COMMA',2,'POINT')})">value</td>
             </tr>
             <tr th:hidden="${userTransactions.getTotalElements()!=0}">
                 <td colspan="3" class="text-center"

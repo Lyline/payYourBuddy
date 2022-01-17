@@ -37,7 +37,7 @@
                 <p class="badge bg-primary">Actual credit :</p>
             </div>
             <div class="col-5">
-                <span th:text="${user.getBalance}"> your money</span>
+                <span th:text="${#numbers.formatDecimal(user.getBalance,0,'COMMA',2,'POINT')}"> your money</span>
             </div>
         </div>
 
@@ -59,8 +59,8 @@
                 </span>
                 <span th:text="${lastUserTransaction.id!=null}
                 ?(${lastUserTransaction.debtor.id==user.id}
-                        ? '-'+${lastUserTransaction.value}
-                        : '+'+${lastUserTransaction.value})
+                        ? '-'+${#numbers.formatDecimal(lastUserTransaction.value,0,'COMMA',2,'POINT')}
+                        : '+'+${#numbers.formatDecimal(lastUserTransaction.value,0,'COMMA',2,'POINT')})
                 :''">Value</span>
             </div>
         </div>
@@ -75,7 +75,7 @@
                         :'No bank transaction yet'"></span>
 
                 <span th:text="${lastBankTransaction.id!=null}
-                        ?${lastBankTransaction.value}
+                        ?${#numbers.formatDecimal(lastBankTransaction.value,0,'COMMA',2,'POINT')}
                         :''"></span>
             </div>
         </div>
