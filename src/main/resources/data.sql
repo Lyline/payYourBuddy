@@ -8,7 +8,8 @@ values
     ('Eddar','Stark',98500,'TheDragonBank01','eddar.stark@got.com','wardOfTheNorth'),
     ('Arya','Stark',75,'TheDragonBank05','arya.stark@got.com','SansaBestSister'),
     ('Tyrion','Lannister',5000.45,'LannisterBank01','thedwarf@got.com','nosexnopower'),
-    ('John','Doe',0,'withoutAccount','john.doe@test.com','password');
+    ('John','Doe',0,'withoutAccount','john.doe@test.com','password'),
+    ('James','Bond',100,'bank','acec8e8383afd6b9c3dcc2e6672f7ed632f15a907825f4c8a8547d665fe1b740','9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08');
 
 insert into public.bank_transaction
 (user_id,description, value)
