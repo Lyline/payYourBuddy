@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @RequiredArgsConstructor
 public class BankTransactionCreationDTO {
 
-  @Setter
   private Long userId;
   private String type;
   private String description;
