@@ -29,6 +29,9 @@
             <input type="password" class="form-control" id="password" required
                    th:field="*{password}">
           </div>
+          <div class="d-flex justify-content-center" th:if="${logging.email}!=null">
+            <span class="alert alert-danger text-center" th:text="'Email or password not exist'"></span>
+          </div>
           <div class="d-flex justify-content-around">
             <button type="submit" class="btn btn-primary">Connect</button>
             <a class="btn btn-primary" href="/register">Create account</a>

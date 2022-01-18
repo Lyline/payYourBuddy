@@ -10,4 +10,5 @@ import lombok.Setter;
 public class UserConnexionDTO {
   private String email;
   private String password;
+  private boolean isConnected;
 }

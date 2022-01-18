@@ -13,11 +13,4 @@ public class UserTransactionCreationDTO {
   private Long creditorId;
   private String description;
   private double value;
-
-  public UserTransactionCreationDTO(Long debtorId, Long creditorId, String description, double value) {
-    this.debtorId = debtorId;
-    this.creditorId = creditorId;
-    this.description = description;
-    this.value = value;
-  }
 }

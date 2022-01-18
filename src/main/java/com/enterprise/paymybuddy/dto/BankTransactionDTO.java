@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class BankTransactionDTO {
-
   private Long id;
   private String description;
   private double value;

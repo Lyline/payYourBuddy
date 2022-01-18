@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class UserTransactionDTO {
-
   private Long id;
   private UserDTO debtor;
   private UserDTO creditor;

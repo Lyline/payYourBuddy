@@ -63,7 +63,7 @@ public class ConnexionControllerTest {
             .param("email","email@test.com")
             .param("password","password"))
         .andExpect(status().isOk())
-        .andExpect(view().name("errorConnexion"))
+        .andExpect(view().name("connexion"))
 
         .andExpect(content().string(containsString("Email or password not exist")));
   }

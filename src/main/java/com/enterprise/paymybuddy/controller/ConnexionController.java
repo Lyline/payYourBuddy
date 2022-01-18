@@ -34,12 +34,14 @@ public class ConnexionController {
 
     if (user!=null){
       UserDTO userDTO=mapper.map(user,UserDTO.class);
-
+      userConnexion.setConnected(true);
       model.addAttribute("id",user.getUserId());
       model.addAttribute("user",userDTO);
 
       return "redirect:/"+user.getUserId();
     }
-    return "errorConnexion";
+
+    model.addAttribute("logging",userConnexion);
+    return "connexion";
   }
 }

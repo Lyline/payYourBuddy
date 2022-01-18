@@ -85,12 +85,10 @@ public class TransactionController{
 
   @PostMapping("/user_transactions")
   public String processUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
-                                       @PathVariable Long id,
-                                       Model model){
+                                       @PathVariable Long id){
     transaction.setDebtorId(id);
 
     boolean transactionValidated=userTransactionService.createTransaction(transaction);
-    model.addAttribute("id",id);
 
     if (transactionValidated) {
       return "transactionSuccess";
@@ -138,7 +136,6 @@ public class TransactionController{
     transaction.setUserId(id);
 
     boolean transactionValidated=bankTransactionService.createTransaction(transaction);
-    model.addAttribute("id",id);
 
     if (transactionValidated) {
       return "transactionSuccess";

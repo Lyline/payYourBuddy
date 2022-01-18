@@ -114,7 +114,13 @@ class BankTransactionServiceTest {
   void givenAUserWithEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsTrue() {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",90.);
-    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"send","send transaction",90.);
+
+    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
+    transactionDTO.setUserId(1L);
+    transactionDTO.setType("send");
+    transactionDTO.setDescription("send transaction");
+    transactionDTO.setValue(90.);
+
     Commission commission=new Commission(0.45);
 
     when(userRepository.getById(any())).thenReturn(user);
@@ -135,7 +141,14 @@ class BankTransactionServiceTest {
   void givenAUserWithNotEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsFalse() {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",1000.);
-    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"send","send transaction",1000.);
+
+    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
+    transactionDTO.setUserId(1L);
+    transactionDTO.setType("send");
+    transactionDTO.setDescription("send transaction");
+    transactionDTO.setValue(1000.);
+
+
     Commission commission=new Commission(5.);
 
     when(userRepository.getById(any())).thenReturn(user);
@@ -156,7 +169,13 @@ class BankTransactionServiceTest {
   void givenAUserWhenReceiveMoneyFromHisBankThenTransactionIsTrue() {
     //Given
     BankTransaction newTransaction=new BankTransaction(1L,user,"receive transaction",1000.);
-    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO(1L,"receive","receive transaction",1000.);
+
+    BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
+    transactionDTO.setUserId(1L);
+    transactionDTO.setType("receive");
+    transactionDTO.setDescription("receive transaction");
+    transactionDTO.setValue(1000.);
+
     Commission commission=new Commission(5);
 
     when(userRepository.getById(any())).thenReturn(user);

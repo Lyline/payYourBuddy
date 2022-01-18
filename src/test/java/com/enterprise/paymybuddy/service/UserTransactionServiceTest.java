@@ -115,7 +115,11 @@ class UserTransactionServiceTest {
   @Test
   void givenADebtorWithMoneyAndACreditorWhenCreateTransactionThenTransactionSaved() {
     //Given
-    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
+    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO();
+      transactionDTO.setDebtorId(1L);
+      transactionDTO.setCreditorId(2L);
+      transactionDTO.setDescription("New Transaction");
+      transactionDTO.setValue(10.);
 
     Commission commission=new Commission(0.05);
 
@@ -146,7 +150,11 @@ class UserTransactionServiceTest {
     //Given
     user.setBalance(0.);
 
-    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO(1L,2L,"New Transaction",10.);
+    UserTransactionCreationDTO transactionDTO=new UserTransactionCreationDTO();
+    transactionDTO.setDebtorId(1L);
+    transactionDTO.setCreditorId(2L);
+    transactionDTO.setDescription("New Transaction");
+    transactionDTO.setValue(10.);
 
     Commission commission=new Commission(0.05);
 
