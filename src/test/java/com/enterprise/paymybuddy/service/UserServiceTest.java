@@ -1,6 +1,6 @@
 package com.enterprise.paymybuddy.service;
 
-import com.enterprise.paymybuddy.dto.FriendConnexion;
+import com.enterprise.paymybuddy.dto.FriendConnexionDTO;
 import com.enterprise.paymybuddy.dto.RegisterDTO;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.jpa.UserRepository;
@@ -56,7 +56,7 @@ class UserServiceTest {
     User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
     User friend=new User("Steve","Roger","steve@test.com","pw","bank",100.);
 
-    FriendConnexion friendConnexion=new FriendConnexion();
+    FriendConnexionDTO friendConnexion=new FriendConnexionDTO();
     friendConnexion.setEmail("steve@test.com");
 
     when(repository.getUserByEmail(anyString())).thenReturn(friend);
@@ -76,18 +76,18 @@ class UserServiceTest {
     //Given
     User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
 
-    FriendConnexion friendConnexion=new FriendConnexion();
-    friendConnexion.setEmail("steve@test.com");
+    FriendConnexionDTO friendConnexionDTO =new FriendConnexionDTO();
+    friendConnexionDTO.setEmail("steve@test.com");
 
     when(repository.getUserByEmail(anyString())).thenReturn(null);
 
     //When
-    boolean actual= classUnderTest.createFriend(user,friendConnexion);
+    boolean actual= classUnderTest.createFriend(user, friendConnexionDTO);
 
     //Then
     assertFalse(actual);
     assertThat(user.getFriends().size()).isEqualTo(0);
-    verify(repository,times(1)).getUserByEmail(getHash(friendConnexion.getEmail()));
+    verify(repository,times(1)).getUserByEmail(getHash(friendConnexionDTO.getEmail()));
     verify(repository,times(0)).save(user);
   }
 
@@ -99,18 +99,18 @@ class UserServiceTest {
 
     user.getFriends().add(friend);
 
-    FriendConnexion friendConnexion=new FriendConnexion();
-    friendConnexion.setEmail("steve@test.com");
+    FriendConnexionDTO friendConnexionDTO =new FriendConnexionDTO();
+    friendConnexionDTO.setEmail("steve@test.com");
 
     when(repository.getUserByEmail(anyString())).thenReturn(friend);
 
     //When
-    boolean actual= classUnderTest.createFriend(user,friendConnexion);
+    boolean actual= classUnderTest.createFriend(user, friendConnexionDTO);
 
     //Then
     assertFalse(actual);
     assertThat(user.getFriends().size()).isEqualTo(1);
-    verify(repository,times(1)).getUserByEmail(getHash(friendConnexion.getEmail()));
+    verify(repository,times(1)).getUserByEmail(getHash(friendConnexionDTO.getEmail()));
     verify(repository,times(0)).save(user);
   }
 

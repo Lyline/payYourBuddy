@@ -21,6 +21,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ The transaction controller allow display bank and user transaction forms and create new transactions.
+
+ @version 0.1
+
+ @see User
+ @see UserDTO
+ @see UserTransaction
+ @see UserTransactionDTO
+ @see UserTransactionCreationDTO
+ @see BankTransaction
+ @see BankTransactionDTO
+ @see BankTransactionCreationDTO
+ */
 @Controller
 @RequestMapping("/{id}")
 public class TransactionController{
@@ -31,8 +45,6 @@ public class TransactionController{
 
   private final ModelMapper mapper=new ModelMapper();
 
-
-
   public TransactionController(UserServiceImpl userService,
                                UserTransactionServiceImpl userTransactionService,
                                BankTransactionServiceImpl bankTransactionService) {
@@ -41,10 +53,19 @@ public class TransactionController{
     this.bankTransactionService=bankTransactionService;
   }
 
+  /**
+   Display the user transaction webpage with the user transaction form.
+
+   @param id        The user id
+   @param userPage  The current page of user transactions displayed
+   @param userSize  The number of user transaction per page displayed
+   @param model     The model interface
+   @return          The user transaction webpage
+   */
   @GetMapping("/user_transactions")
-  public String showUserTransactions(Model model, @PathVariable Long id,
+  public String showUserTransactions(@PathVariable Long id,
                                      @RequestParam("page") Optional<Integer> userPage,
-                                     @RequestParam("size") Optional<Integer> userSize){
+                                     @RequestParam("size") Optional<Integer> userSize,Model model){
     int currentPageUser= userPage.orElse(1);
     int pageSizeUser= userSize.orElse(3);
 
@@ -83,6 +104,14 @@ public class TransactionController{
     return "userTransactions";
   }
 
+  /**
+   Post the user transaction form, if it's validated return the validation transaction webpage, else return error
+   transaction webpage.
+
+   @param id          The user id
+   @param transaction The transaction attributes : debtor id, creditor id, description of transaction and the value
+   @return            The validation transaction webpage, else return error transaction webpage
+   */
   @PostMapping("/user_transactions")
   public String processUserTransaction(@Valid @ModelAttribute("newTransaction") UserTransactionCreationDTO transaction,
                                        @PathVariable Long id){
@@ -97,12 +126,21 @@ public class TransactionController{
     }
   }
 
+  /**
+   Display the bank transaction webpage with the bank transaction form.
+
+   @param id        The user id
+   @param userPage  The current page of user transactions displayed
+   @param userSize  The number of user transaction per page displayed
+   @param model     The model interface
+   @return          The bank transaction webpage
+   */
   @GetMapping("/bank_transactions")
-  public String showBankTransactions(Model model, @PathVariable Long id,
-                                     @RequestParam("page") Optional<Integer> bankPage,
-                                     @RequestParam("size") Optional<Integer> bankSize){
-    int currentPageBank= bankPage.orElse(1);
-    int pageSizeBank= bankSize.orElse(3);
+  public String showBankTransactions(@PathVariable Long id,
+                                     @RequestParam("page") Optional<Integer> userPage,
+                                     @RequestParam("size") Optional<Integer> userSize, Model model){
+    int currentPageBank= userPage.orElse(1);
+    int pageSizeBank= userSize.orElse(3);
 
     //User
     User user= userService.getUser(id).get();
@@ -129,10 +167,18 @@ public class TransactionController{
     return "bankTransactions";
   }
 
+  /**
+   Post the bank transaction form, if it's validated return the validation transaction webpage, else return error
+   transaction webpage.
+
+   @param id          The user id
+   @param transaction The transaction attributes : user id, type of transaction <i>send</i> or <i>receive</i>, description
+   and the value
+   @return            The validation transaction webpage, else return error transaction webpage
+   */
   @PostMapping("/bank_transactions")
   public String processBankTransaction(@Valid @ModelAttribute("newTransaction")BankTransactionCreationDTO transaction,
-                                       @PathVariable Long id,
-                                       Model model){
+                                       @PathVariable Long id){
     transaction.setUserId(id);
 
     boolean transactionValidated=bankTransactionService.createTransaction(transaction);

@@ -11,22 +11,44 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ The connexion controller allow to display the connexion form and connect the user to the application.
+
+ @version 0.1
+
+ @see UserConnexionDTO
+ @see User
+ */
 @Controller
 public class ConnexionController {
 
   private final ConnexionServiceImpl service;
-  ModelMapper mapper=new ModelMapper();
+  private final ModelMapper mapper=new ModelMapper();
 
   public ConnexionController(ConnexionServiceImpl service) {
     this.service = service;
   }
 
+  /**
+   Display the connexion form webpage.
+
+   @param model The model interface
+   @return      The connexion form webpage
+   */
   @GetMapping("/")
   public String showConnectForm(Model model){
     model.addAttribute("logging",new UserConnexionDTO());
     return "connexion";
   }
 
+  /**
+   Posts the connexion form and redirect to user domain if the connexion is validated else display a connexion webpage
+   with an error message.
+
+   @param userConnexion The connexion attributes : email, password and validation statement
+   @param model         The model interface
+   @return              The user's homepage if the connexion is validated, else connexion webpage with an error message
+   */
   @PostMapping("/")
   public String processConnectForm(@ModelAttribute("logging") UserConnexionDTO userConnexion,
                                    Model model){

@@ -14,6 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ The user transaction service implementation. It's extend to UserTransactionService.
+
+ @version 0.1
+
+ @see UserTransaction
+ @see User
+ @see Commission
+ */
 @Service
 public class UserTransactionServiceImpl implements UserTransactionService{
   private final UserTransactionRepository transactionRepository;
@@ -27,11 +36,22 @@ public class UserTransactionServiceImpl implements UserTransactionService{
     this.commissionService = commissionService;
   }
 
+  /**
+
+   @param id        The user id
+   @param pageable  The Pageable interface
+   @return          Pages of credit and debit user's transaction of this user
+   */
   @Override
   public Page<UserTransaction> getAllTransactions(Long id, Pageable pageable) {
     return transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserIdOrderByTransactionIdDesc(id,id,pageable);
   }
 
+  /**
+
+   @param id  The user id
+   @return    The user transaction with the highest transaction id from the user list transactions if it's exist or null
+   */
   @Override
   public UserTransaction getLastTransaction(Long id){
     List<UserTransaction> transactions=transactionRepository.findUserTransactionsByCreditor_UserIdOrDebtor_UserId(id,id);
@@ -41,6 +61,11 @@ public class UserTransactionServiceImpl implements UserTransactionService{
         .orElse(new UserTransaction());
   }
 
+  /**
+
+   @param transactionForm The transaction attributes : debtor id, creditor id, description and value of transaction
+   @return                True if the transaction is validated, else false
+   */
   @Override
   @Transactional
   public boolean createTransaction(UserTransactionCreationDTO transactionForm) {

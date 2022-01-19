@@ -43,9 +43,9 @@
         </div>
     </div>
     <div class="d-flex justify-content-center" th:if="${connexion.email}!=null">
-        <span class="alert alert-success text-center" th:if="${connexion.isValidation()}"
+        <span class="alert alert-success text-center" th:if="${connexion.isValidated()}"
               th:text="'user found and added'"></span>
-        <span class="alert alert-danger text-center" th:if="${!connexion.isValidation()}"
+        <span class="alert alert-danger text-center" th:if="${!connexion.isValidated()}"
               th:text="'user not found or friend already added'"></span>
     </div>
 

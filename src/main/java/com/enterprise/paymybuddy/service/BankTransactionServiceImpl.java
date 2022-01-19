@@ -14,6 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ The bank's transaction service implementation. It's implement BankTransactionService
+
+ @version 0.1
+
+ @see BankTransactionRepository
+ @see UserRepository
+ @see CommissionService
+ */
 @Service
 public class BankTransactionServiceImpl implements BankTransactionService{
   private final BankTransactionRepository transactionRepository;
@@ -28,11 +37,23 @@ public class BankTransactionServiceImpl implements BankTransactionService{
     this.commissionService=commissionService;
   }
 
+  /**
+
+   @param id        The user id
+   @param pageable  The pageable interface
+   @return          Pages of bank's transaction of this user sorted by transaction id in descending order
+   */
   @Override
   public Page<BankTransaction> getAllTransactions(Long id, Pageable pageable) {
     return transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(id,pageable);
   }
 
+  /**
+
+   @param id  The user id
+   @return    The bank transaction with the highest transaction id from the user list transactions if it's exist or null
+   */
+  @Override
   public BankTransaction getLastTransaction(Long id){
     List<BankTransaction> transactions=transactionRepository.findBankTransactionsByUserUserId(id);
 
@@ -41,6 +62,11 @@ public class BankTransactionServiceImpl implements BankTransactionService{
         .orElse(new BankTransaction());
   }
 
+  /**
+
+   @param transaction The transaction attributes : user id, transaction type, description and value of transaction
+   @return            True if the transaction is validated, else false
+   */
   @Override
   @Transactional
   public boolean createTransaction(BankTransactionCreationDTO transaction) {

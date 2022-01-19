@@ -16,6 +16,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ The home controller allow display the homepage of a user.
+
+ @version 0.1
+
+ @see User
+ @see UserTransaction
+ @see UserTransactionDTO
+ @see BankTransaction
+ @see BankTransactionDTO
+ */
 @Controller
 @RequestMapping("/")
 public class HomeController {
@@ -30,8 +41,16 @@ public class HomeController {
     this.bankTransactionService = bankTransactionService;
   }
 
+  /**
+   Displays the homepage of the user, if it's connected. It's display the current balance, the last user transaction and
+   the last bank transaction
+
+   @param id    The user id
+   @param model The model interface
+   @return      The homepage of the user
+   */
   @GetMapping("/{id}")
-  public String showActualInformation(Model model, @PathVariable Long id){
+  public String showActualInformation(@PathVariable Long id, Model model ){
 
     User user= userService.getUser(id).get();
 

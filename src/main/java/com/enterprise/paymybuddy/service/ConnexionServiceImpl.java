@@ -9,6 +9,14 @@ import java.util.Optional;
 
 import static com.enterprise.paymybuddy.service.HashService.getHash;
 
+/**
+ The connexion service implementation. It's extend of ConnexionService.
+
+ @version 0.1
+
+ @see User
+ @see UserConnexionDTO
+ */
 @Service
 public class ConnexionServiceImpl implements ConnexionService {
   private final UserRepository repository;
@@ -17,6 +25,11 @@ public class ConnexionServiceImpl implements ConnexionService {
     this.repository=repository;
   }
 
+  /**
+
+   @param logging The connexion attributes : email and password of the user
+   @return        The user if it's exist, else null
+   */
   @Override
   public User connect(UserConnexionDTO logging) {
     String emailEncoded= getHash(logging.getEmail());

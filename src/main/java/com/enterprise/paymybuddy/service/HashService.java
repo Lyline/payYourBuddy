@@ -5,8 +5,18 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashService {
+/**
+ The hash service is use for encrypt a data of user.
 
+ @version 0.1
+ */
+public class HashService {
+  /**
+   Hashes the character string with the sha-256 algorithm.
+
+   @param stringToConvert The character string to convert
+   @return                The character string hashed
+   */
   public static String getHash(String stringToConvert){
     String hashValue="";
 

@@ -8,6 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ The commission service implementation. It's extend to CommissionService.
+
+ @version 0.1
+
+ @see Commission
+ */
 @Service
 public class CommissionServiceImpl implements CommissionService{
   private final CommissionRepository repository;
@@ -16,6 +23,11 @@ public class CommissionServiceImpl implements CommissionService{
     this.repository = repository;
   }
 
+  /**
+
+   @param transactionValue  The value of transaction
+   @return                  The commission object with the commission value rounded
+   */
   @Override
   public Commission calculate(double transactionValue) {
     double commissionRate=0.5;
@@ -29,6 +41,11 @@ public class CommissionServiceImpl implements CommissionService{
     return new Commission(commissionRound);
   }
 
+  /**
+
+   @param commission The commission object
+   @return           The commission object if it's validated, else null
+   */
   @Override
   @Transactional
   public Commission save(Commission commission) {

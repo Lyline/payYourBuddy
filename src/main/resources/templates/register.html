@@ -48,12 +48,12 @@
                         <button class="btn btn-success" type="submit">Create</button>
                     </div>
                     <div th:if="${inscription.getEmail()}!=null">
-                        <div th:if="${!inscription.isValidation()}">
+                        <div th:if="${!inscription.isValidated()}">
                             <span class="alert alert-danger text-center col-10"> Sorry, this email already exist</span>
                             <button class="btn btn-success" type="submit">Create</button>
                         </div>
 
-                        <div th:if="${inscription.isValidation()}">
+                        <div th:if="${inscription.isValidated()}">
                             <span class="alert alert-success text-center col-10"> You are created in the matrix !</span>
                             <a class="btn btn-success" href="/"> Logging Now</a>
                         </div>
