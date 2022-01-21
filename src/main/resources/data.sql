@@ -1,4 +1,4 @@
-insert into public.users
+/*insert into public.users
 (first_name, last_name,balance, bank_account, email, password)
 values
     ('Tony','Stark',10000,'AvengerBank01','tony.stark@avenger.com','ImIronMan_1'),
@@ -69,3 +69,4 @@ values
     (7,5),
     (7,6),
     (7,3);
+*/

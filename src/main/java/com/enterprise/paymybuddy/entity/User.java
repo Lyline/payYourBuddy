@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,7 +30,16 @@ public class User {
    The user id in the database.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(generator = "sequence-generator")
+  @GenericGenerator(
+      name = "sequence-generator",
+      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+      parameters = {
+          @Parameter(name="sequence_name",value="user_sequence"),
+          @Parameter(name="initial_value",value="4"),
+          @Parameter(name="increment_size",value = "2")
+      }
+  )
   @Column(name = "user_id")
   private Long userId;
 
