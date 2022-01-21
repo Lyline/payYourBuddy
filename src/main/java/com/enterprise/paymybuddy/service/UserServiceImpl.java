@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService{
   @Override
   @Transactional
   public boolean createUser(RegisterDTO inscription) {
-    User response=repository.getUserByEmail(inscription.getEmail());
+    User response=repository.getUserByEmail(getHash(inscription.getEmail()));
 
     if (response==null){
       String emailEncoded= getHash(inscription.getEmail());
