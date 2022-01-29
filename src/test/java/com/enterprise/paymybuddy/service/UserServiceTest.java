@@ -136,7 +136,7 @@ class UserServiceTest {
 
     //Then
     assertTrue(actual);
-    verify(repository,times(1)).getUserByEmail(inscription.getEmail());
+    verify(repository,times(1)).getUserByEmail(getHash(inscription.getEmail()));
     verify(repository,times(1)).save(user);
   }
 
@@ -162,7 +162,7 @@ class UserServiceTest {
 
     //Then
     assertFalse(actual);
-    verify(repository,times(1)).getUserByEmail(inscription.getEmail());
+    verify(repository,times(1)).getUserByEmail(getHash(inscription.getEmail()));
     verify(repository,times(0)).save(user);
   }
 }
