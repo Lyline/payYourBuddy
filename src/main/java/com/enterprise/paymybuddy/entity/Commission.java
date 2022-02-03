@@ -3,6 +3,7 @@ package com.enterprise.paymybuddy.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
  @version 0.1
  */
 @Getter
+@Setter
 @RequiredArgsConstructor
 @Entity
 @Table(name = "commission")
@@ -21,9 +23,11 @@ public class Commission {
   /**
    The commission id in the database.
    */
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter(AccessLevel.NONE)
+  @Column(nullable = false)
   private Long id;
 
   /**

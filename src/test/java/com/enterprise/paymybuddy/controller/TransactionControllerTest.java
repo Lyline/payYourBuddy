@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.controller;
 
 import com.enterprise.paymybuddy.entity.BankTransaction;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
 import com.enterprise.paymybuddy.service.BankTransactionServiceImpl;
@@ -45,12 +46,12 @@ class TransactionControllerTest {
   User user1=new User("Steve","Rogers","steve@test.com","pw","bank",100.);
 
   List<UserTransaction> userTransactions=new ArrayList<>();
-  UserTransaction userTransaction=new UserTransaction(1L,user,user1,"New user transaction",30.);
-  UserTransaction userTransaction1=new UserTransaction(2L,user1,user,"One more new user transaction",30.);
+  UserTransaction userTransaction=new UserTransaction(1L,user,user1,"New user transaction",30.,new Commission());
+  UserTransaction userTransaction1=new UserTransaction(2L,user1,user,"One more new user transaction",30.,new Commission());
 
   List<BankTransaction> bankTransactions=new ArrayList<>();
-  BankTransaction bankTransaction=new BankTransaction(1L,user,"New bank transaction",-130.);
-  BankTransaction bankTransaction1=new BankTransaction(2L,user,"One more new bank transaction",230.);
+  BankTransaction bankTransaction=new BankTransaction(1L,user,"New bank transaction",-130., new Commission());
+  BankTransaction bankTransaction1=new BankTransaction(2L,user,"One more new bank transaction",230., new Commission());
 
 
   @Test

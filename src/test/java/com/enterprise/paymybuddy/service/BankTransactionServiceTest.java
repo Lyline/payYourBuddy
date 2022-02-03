@@ -32,8 +32,8 @@ class BankTransactionServiceTest {
 
   User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
 
-  BankTransaction transaction=new BankTransaction(1L,user,"bank transaction test",5.);
-  BankTransaction transaction1=new BankTransaction(2L,user,"one more bank transaction test",5.);
+  BankTransaction transaction=new BankTransaction(1L,user,"bank transaction test",5.,new Commission());
+  BankTransaction transaction1=new BankTransaction(2L,user,"one more bank transaction test",5.,new Commission());
   List<BankTransaction>transactions=new ArrayList<>();
 
   @BeforeEach
@@ -51,7 +51,7 @@ class BankTransactionServiceTest {
     transactions.add(transaction1);
 
     Page<BankTransaction> page=new PageImpl<>(transactions);
-    when(transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
+    when(transactionRepository.findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
         .thenReturn(page);
 
     //When
@@ -60,13 +60,13 @@ class BankTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(2);
     verify(transactionRepository,times(1))
-        .findBankTransactionsByUserUserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
+        .findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
   }
 
   @Test
   void givenAUserWithoutBankTransactionWhenGetAllTransactionThenPageIsEmpty() {
     //Given
-    when(transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
+    when(transactionRepository.findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(any(),any(PageRequest.class)))
         .thenReturn(Page.empty());
 
     //When
@@ -75,7 +75,7 @@ class BankTransactionServiceTest {
     //Then
     assertThat(actual.getTotalElements()).isEqualTo(0);
     verify(transactionRepository,times(1))
-        .findBankTransactionsByUserUserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
+        .findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(1L, PageRequest.of(0,3));
   }
 
   @Test
@@ -85,7 +85,7 @@ class BankTransactionServiceTest {
     transactions.add(transaction);
     transactions.add(transaction1);
 
-    when(transactionRepository.findBankTransactionsByUserUserId(anyLong()))
+    when(transactionRepository.findBankTransactionsByDebtor_UserId(anyLong()))
         .thenReturn(transactions);
 
     //When
@@ -100,7 +100,7 @@ class BankTransactionServiceTest {
     //Given
     List<BankTransaction>transactions=new ArrayList<>();
 
-    when(transactionRepository.findBankTransactionsByUserUserId(anyLong()))
+    when(transactionRepository.findBankTransactionsByDebtor_UserId(anyLong()))
         .thenReturn(transactions);
 
     //When
@@ -113,7 +113,7 @@ class BankTransactionServiceTest {
   @Test
   void givenAUserWithEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsTrue() {
     //Given
-    BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",90.);
+    BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",90., new Commission());
 
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
     transactionDTO.setUserId(1L);
@@ -140,7 +140,7 @@ class BankTransactionServiceTest {
   @Test
   void givenAUserWithNotEnoughMoneyWhenSendMoneyToHisBankThenTransactionIsFalse() {
     //Given
-    BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",1000.);
+    BankTransaction newTransaction=new BankTransaction(1L,user,"send transaction",1000.,new Commission());
 
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
     transactionDTO.setUserId(1L);
@@ -168,7 +168,7 @@ class BankTransactionServiceTest {
   @Test
   void givenAUserWhenReceiveMoneyFromHisBankThenTransactionIsTrue() {
     //Given
-    BankTransaction newTransaction=new BankTransaction(1L,user,"receive transaction",1000.);
+    BankTransaction newTransaction=new BankTransaction(1L,user,"receive transaction",1000.,new Commission());
 
     BankTransactionCreationDTO transactionDTO=new BankTransactionCreationDTO();
     transactionDTO.setUserId(1L);

@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  Defines the bank transaction object, data object. A bank's transaction is an external money transaction between the
@@ -20,39 +21,9 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "bank_transaction")
-public class BankTransaction {
-  /**
-   The transaction id in the database.
-   */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long transactionId;
+public class BankTransaction extends Transaction{
 
-  /**
-   The user on which the transaction processed.
-   */
-  @ManyToOne
-  @JoinColumn(name = "user_id",referencedColumnName = "user_Id",nullable = false)
-  private User user;
-
-  /**
-   The description of the transaction.
-   */
-  @Column(columnDefinition = "varchar (100)",
-      nullable = false)
-  private String description;
-
-  /**
-   The value of the transaction.
-   */
-  @Column(columnDefinition = "numeric (10,2)",
-      nullable = false)
-  private double value;
-
-  public BankTransaction(Long id,User user, String description, double value) {
-    this.transactionId=id;
-    this.user =user;
-    this.description = description;
-    this.value = value;
+  public BankTransaction(Long id,User user, String description, double value, Commission commission) {
+    super(id,user,description,value,commission);
   }
 }

@@ -102,9 +102,12 @@ public class UserTransactionServiceImpl implements UserTransactionService{
         transaction.setDescription(transactionForm.getDescription());
         transaction.setValue(transactionForm.getValue());
 
+        commissionService.save(commission);
+
+        transaction.setCommission(commission);
+
         transactionRepository.save(transaction);
 
-        commissionService.save(commission);
 
       }else throw new ArithmeticException();
     } catch (ArithmeticException e) {

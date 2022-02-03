@@ -23,7 +23,7 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
    @param pageable  The pageable interface
    @return          Pages of bank's transaction of this user sorted by transaction id in descending order
    */
-  Page<BankTransaction> findBankTransactionsByUserUserIdOrderByTransactionIdDesc(Long id, Pageable pageable);
+  Page<BankTransaction> findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(Long id, Pageable pageable);
 
   /**
    Find all bank's transactions of a user.
@@ -31,5 +31,5 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
    @param id  The user id
    @return    The list of bank transactions of this user
    */
-  List<BankTransaction> findBankTransactionsByUserUserId(Long id);
+  List<BankTransaction> findBankTransactionsByDebtor_UserId(Long id);
 }

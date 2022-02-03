@@ -32,8 +32,8 @@ class UserTransactionServiceTest {
   User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
   User user1=new User("Steve","Rogers","steve@test.com","pw","bank",100.);
 
-  UserTransaction transaction=new UserTransaction(1L,user,user1,"user transaction test",10.);
-  UserTransaction transaction1=new UserTransaction(2L,user1,user,"one more user transaction test",10.);
+  UserTransaction transaction=new UserTransaction(1L,user,user1,"user transaction test",10., new Commission());
+  UserTransaction transaction1=new UserTransaction(2L,user1,user,"one more user transaction test",10., new Commission());
   List<UserTransaction>transactions=new ArrayList<>();
 
   @BeforeEach

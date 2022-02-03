@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,16 +28,7 @@ public class User {
    The user id in the database.
    */
   @Id
-  @GeneratedValue(generator = "sequence-generator")
-  @GenericGenerator(
-      name = "sequence-generator",
-      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-      parameters = {
-          @Parameter(name="sequence_name",value="user_sequence"),
-          @Parameter(name="initial_value",value="4"),
-          @Parameter(name="increment_size",value = "2")
-      }
-  )
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
   private Long userId;
 
@@ -86,18 +75,16 @@ public class User {
 
    @see UserTransaction
    */
-  @OneToMany(mappedBy = "debtor",cascade = CascadeType.ALL)
-  @Setter(AccessLevel.NONE)
-  private List<UserTransaction> userTransactions=new ArrayList<>();
+  @OneToMany(mappedBy = "debtor", cascade = CascadeType.ALL)
+  private List<UserTransaction> userTransactions = new ArrayList<>();
 
   /**
    The list of transactions with the user's bank : send and receive money. It's a list of BankTransaction.
 
    @see BankTransaction
    */
-  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-  @Setter(AccessLevel.NONE)
-  private List<BankTransaction> bankTransactions=new ArrayList<>();
+  @OneToMany(mappedBy = "debtor",cascade = {CascadeType.ALL})
+  private List<BankTransaction> bankTransactions = new ArrayList<>();
 
   /**
    The friend's list of user. It's a list of User

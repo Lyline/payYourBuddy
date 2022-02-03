@@ -45,7 +45,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
    */
   @Override
   public Page<BankTransaction> getAllTransactions(Long id, Pageable pageable) {
-    return transactionRepository.findBankTransactionsByUserUserIdOrderByTransactionIdDesc(id,pageable);
+    return transactionRepository.findBankTransactionsByDebtor_UserIdOrderByTransactionIdDesc(id,pageable);
   }
 
   /**
@@ -55,7 +55,7 @@ public class BankTransactionServiceImpl implements BankTransactionService{
    */
   @Override
   public BankTransaction getLastTransaction(Long id){
-    List<BankTransaction> transactions=transactionRepository.findBankTransactionsByUserUserId(id);
+    List<BankTransaction> transactions=transactionRepository.findBankTransactionsByDebtor_UserId(id);
 
     return transactions.stream()
         .max(Comparator.comparing(BankTransaction::getTransactionId))
@@ -83,9 +83,10 @@ public class BankTransactionServiceImpl implements BankTransactionService{
         user.setBalance(balance-transaction.getValue()- commission.getValue());
 
         //Construct bank transaction
-        bankTransaction.setUser(user);
+        bankTransaction.setDebtor(user);
         bankTransaction.setDescription(transaction.getDescription());
         bankTransaction.setValue(-transaction.getValue());
+        bankTransaction.setCommission(commission);
 
         //Save data
         userRepository.save(user);
@@ -101,14 +102,16 @@ public class BankTransactionServiceImpl implements BankTransactionService{
       user.setBalance(balance+transaction.getValue()- commission.getValue());
 
       //Construct bank transaction
-      bankTransaction.setUser(user);
+      bankTransaction.setDebtor(user);
       bankTransaction.setDescription(transaction.getDescription());
       bankTransaction.setValue(transaction.getValue());
+      bankTransaction.setCommission(commission);
 
       //Save data
       userRepository.save(user);
-      transactionRepository.save(bankTransaction);
+
       commissionService.save(commission);
+      transactionRepository.save(bankTransaction);
 
       return true;
     }

@@ -1,6 +1,7 @@
 package com.enterprise.paymybuddy.controller;
 
 import com.enterprise.paymybuddy.entity.BankTransaction;
+import com.enterprise.paymybuddy.entity.Commission;
 import com.enterprise.paymybuddy.entity.User;
 import com.enterprise.paymybuddy.entity.UserTransaction;
 import com.enterprise.paymybuddy.service.BankTransactionServiceImpl;
@@ -39,8 +40,8 @@ class HomeControllerTest {
     User user=new User("Tony","Stark","tony@test.com","pw","bank",100.);
     User user1=new User("Steve","Rogers","steve@test.com","pw","bank",100.);
 
-    UserTransaction userTransaction=new UserTransaction(1L,user,user1,"new transaction3",30.);
-    BankTransaction bankTransaction=new BankTransaction(1L,user,"bank transaction1",-30.);
+    UserTransaction userTransaction=new UserTransaction(1L,user,user1,"new transaction3",30.,new Commission());
+    BankTransaction bankTransaction=new BankTransaction(1L,user,"bank transaction1",-30., new Commission());
 
     when(userServiceImpl.getUser(1L)).thenReturn(java.util.Optional.of(user));
     when(transactionService.getLastTransaction(anyLong())).thenReturn(userTransaction);
