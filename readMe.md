@@ -10,6 +10,7 @@
 #### Modèle physique de données
 ![](externalRessouces/PDM.png)
 ### Implémentation du code
+- Implémentation de l'architecture MVC (Model-Repo-Service-Controller)
 - Implémentation des modèles et des DTO
 - Mise en place de la base de données PostgreSql
 - Création des relations base de données entre les modèles
